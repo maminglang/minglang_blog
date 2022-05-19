@@ -1,33 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@maminglang 
-yihong0618
-/
-gitblog
-Public
-Code
-Issues
-219
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-gitblog/main.py /
-@yihong0618
-yihong0618 fix: invald char in xml bug
-Latest commit 1d515f6 on 26 Jan
- History
- 3 contributors
-@yihong0618@frostming@kemingy
-300 lines (242 sloc)  9.05 KB
-   
 # -*- coding: utf-8 -*-
 import argparse
 import os
@@ -328,16 +298,3 @@ if __name__ == "__main__":
     )
     options = parser.parse_args()
     main(options.github_token, options.repo_name, options.issue_number)
-© 2022 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-Loading complete
