@@ -75,18 +75,14 @@ def _valid_xml_char_ordinal(c):
         or 0x10000 <= codepoint <= 0x10FFFF
     )
 
-
 def format_time(time):
     return str(time)[:10]
-
 
 def login(token):
     return Github(token)
 
-
 def get_repo(user: Github, repo: str):
     return user.get_repo(repo)
-
 
 def parse_TODO(issue):
     body = issue.body.splitlines()
@@ -100,27 +96,21 @@ def parse_TODO(issue):
         todo_done + todo_undone,
     )
 
-
 def get_top_issues(repo):
     return repo.get_issues(labels=TOP_ISSUES_LABELS)
-
 
 def get_todo_issues(repo):
     return repo.get_issues(labels=TODO_ISSUES_LABELS)
 
-
 def get_repo_labels(repo):
     return [l for l in repo.get_labels()]
-
 
 def get_issues_from_label(repo, label):
     return repo.get_issues(labels=(label,))
 
-
 def add_issue_info(issue, md):
     time = format_time(issue.created_at)
     md.write(f"- [{issue.title}]({issue.html_url})--{time}\n")
-
 
 def add_md_todo(repo, md, me):
     todo_issues = list(get_todo_issues(repo))
@@ -137,7 +127,6 @@ def add_md_todo(repo, md, me):
                 # new line
                 md.write("\n")
 
-
 def add_md_top(repo, md, me):
     top_issues = list(get_top_issues(repo))
     if not TOP_ISSUES_LABELS or not top_issues:
@@ -147,7 +136,6 @@ def add_md_top(repo, md, me):
         for issue in top_issues:
             if is_me(issue, me):
                 add_issue_info(issue, md)
-
 
 def add_md_firends(repo, md, me):
     s = FRIENDS_TABLE_HEAD
