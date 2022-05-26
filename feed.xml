@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-05-25T09:51:25.080836+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-05-25T09:51:25.251982+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-05-26T00:24:06.266642+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-05-26T00:24:06.409293+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
 <p>目前HTTP/1.1规定了八种方法：</p>
 <ul>
 <li><strong>GET</strong>   获取数据</li>
@@ -15,10 +15,11 @@
 <p>安全：在HTTP协议中，<strong>安全</strong>是指请求方法不会破坏服务器上的资源，即不会对服务器上的资源造成实质的修改
 幂等：多次执行相同的操作，姐夫哦也都是相同的。</p>
 <h2>URI格式</h2>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-05-25T09:51:25.341841+00:00</updated><content type="html"><![CDATA[<ul>
+<p><img src="https://user-images.githubusercontent.com/22972346/170390312-0d76f62d-9702-43d4-b864-837d06961120.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-05-26T00:24:06.482774+00:00</updated><content type="html"><![CDATA[<ul>
 <li>并发变成Bug源头</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-05-25T09:51:25.429393+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-05-26T00:24:06.550451+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
 <ul>
 <li>CND
 Content Delivery Network，内容分发网络，工作在客户端和服务器之间，它应用了HTTP协议里的缓存和代理技术，代替源站响应客户端的请求，主要起到缓存加速的作用。</li>
@@ -79,7 +80,7 @@ HTTP协议主要分为一下四大类：
 再搭配其他字段决定缓存策略。
 <strong>Server</strong>：相应字段，告诉客户端当前正在提供Web服务的软件名称和版本号。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-05-25T09:51:25.524672+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-05-26T00:24:06.640067+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
 <p>这整个下单过程，如果全部同步阻塞，那么耗时会增加，用户等待的时间会加长，体验不太好，同时下单过程依赖的链路越长，风险越大。为了加快响应，减少风险，我们可以把一些非必须卡在主链路中的业务拆解出去，让它们和主业务解耦。下单的最关键核心就是要保证库存、用户支付、商家打款的一致性，消息的通知完全可以走异步。这样整个下单过程不会因为通知商家或者通知用户阻塞而阻塞，也不会因为它们失败而提示订单失败。</p>
 <p><img src="https://user-images.githubusercontent.com/22972346/158500145-04bfeb6c-b27f-4688-b465-abe0a8229631.png" alt="image" /></p>
 <p>接下来就是如何设计一个消息引擎了，宏观来看一个消息引擎支持发送、存储、接收就行了。
