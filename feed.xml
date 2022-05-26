@@ -1,5 +1,35 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-05-26T00:40:36.716426+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-05-26T00:40:36.872055+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-05-26T00:52:36.041909+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-05-26T00:52:36.190534+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
+<ul>
+<li>1××：提示信息，表示目前是协议处理的中间状态，还需要后续的操作；</li>
+<li>2××：成功，报文已经收到并被正确处理；
+<strong>200 OK</strong>
+<strong>204 Not Content</strong>：与200基本相同，但是响应头后没有body数据
+<strong>206 Partial Content</strong>：服务器成功处理请求，但是body中的数据不是全部资源，二十其中的一部分，是HTTP分块下载或断点续传的基础。通常会伴随头部字段“Content-Range”，表示相应报文中body数据的具体范围。例如“Content-Range: bytes 0-99/2000”，意思是此次获取的是总计2000个字节的前100个字节</li>
+<li>3××：重定向，资源位置发生变动，需要客户端重新发送请求；
+**“301 Moved Permanently”**俗称“永久重定向”，含义是此次请求的资源已经不存在
+了，需要改用新的URI再次访问。</li>
+</ul>
+<p>与它类似的是“302 Found”，曾经的描述短语是“Moved Temporarily”，俗称“临时重定向”，意思是请求的资源还在，但需要暂时用另一个URI来访问。</p>
+<ul>
+<li>
+<p>4××：客户端错误，请求报文有误，服务器无法处理；
+**“400 Bad Request”**是一个通用的错误码，表示请求报文有错误，但具体是数据格式错误、缺少请求头还是URI超长它没有明确说，只是一个笼统的错误，客户端看到400只会是“一头雾水”“不知所措”。所以，在开发Web应用时应当尽量避免给客户端返回400，而是要用其他更有明确含义的状态码。</p>
+<p>**“403 Forbidden”**实际上不是客户端的请求出错，而是表示服务器禁止访问资
+源。原因可能多种多样，例如信息敏感、法律禁止等，如果服务器友好一点，可以
+在body里详细说明拒绝请求的原因，不过现实中通常都是直接给一个“闭门羹”。</p>
+</li>
+</ul>
+<p>**“404 Not Found”**可能是我们最常看见也是最不愿意看到的一个状态码，它的原意是资源在本服务器上未找到，所以无法提供给客户端</p>
+<ul>
+<li>5××：服务器错误，服务器在处理请求时内部发生了错误
+**“500 Internal Server Error”**与400类似，也是一个通用的错误码，服务器究竟发生了什么错误我们是不知道的。不过对于服务器来说这应该算是好事，通常不应该把服务器内部的详细信息，例如出错的函数调用栈告诉外界。虽然不利于调试，但能够防止黑客的窥探或者分析。</li>
+</ul>
+<p>**“501 Not Implemented”**表示客户端请求的功能还不支持，这个错误码比500要“温和”一些，和“即将开业，敬请期待”的意思差不多，不过具体什么时候“开业”就不好说了。</p>
+<p>**“502 Bad Gateway”**通常是服务器作为网关或者代理时返回的错误码，表示服务器自身工作正常，访问后端服务器时发生了错误，但具体的错误原因也是不知道的。</p>
+<p>**“503 Service Unavailable”**表示服务器当前很忙，暂时无法响应服务，我们上网时有时候遇到的“网络服务正忙，请稍后重试”的提示信息就是状态码503。</p>
+<p>503是一个“临时”的状态，很可能过几秒钟后服务器就不那么忙了，可以继续提供服务，所以503响应报文里通常还会有一个“Retry-After”字段，指示客户端可以在多久以后再次尝试发送请求。</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-05-26T00:52:36.271994+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
 <p>目前HTTP/1.1规定了八种方法：</p>
 <ul>
 <li><strong>GET</strong>   获取数据</li>
@@ -22,10 +52,10 @@
 <li>标记资源所在位置的path
 <img src="https://user-images.githubusercontent.com/22972346/170391320-d4f8abe7-e655-4dce-a0d0-93fb4ec4fc65.png" alt="image" /></li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-05-26T00:40:36.961010+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-05-26T00:52:36.338520+00:00</updated><content type="html"><![CDATA[<ul>
 <li>并发变成Bug源头</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-05-26T00:40:37.031679+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-05-26T00:52:36.406930+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
 <ul>
 <li>CND
 Content Delivery Network，内容分发网络，工作在客户端和服务器之间，它应用了HTTP协议里的缓存和代理技术，代替源站响应客户端的请求，主要起到缓存加速的作用。</li>
@@ -86,7 +116,7 @@ HTTP协议主要分为一下四大类：
 再搭配其他字段决定缓存策略。
 <strong>Server</strong>：相应字段，告诉客户端当前正在提供Web服务的软件名称和版本号。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-05-26T00:40:37.112356+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-05-26T00:52:36.507089+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
 <p>这整个下单过程，如果全部同步阻塞，那么耗时会增加，用户等待的时间会加长，体验不太好，同时下单过程依赖的链路越长，风险越大。为了加快响应，减少风险，我们可以把一些非必须卡在主链路中的业务拆解出去，让它们和主业务解耦。下单的最关键核心就是要保证库存、用户支付、商家打款的一致性，消息的通知完全可以走异步。这样整个下单过程不会因为通知商家或者通知用户阻塞而阻塞，也不会因为它们失败而提示订单失败。</p>
 <p><img src="https://user-images.githubusercontent.com/22972346/158500145-04bfeb6c-b27f-4688-b465-abe0a8229631.png" alt="image" /></p>
 <p>接下来就是如何设计一个消息引擎了，宏观来看一个消息引擎支持发送、存储、接收就行了。
