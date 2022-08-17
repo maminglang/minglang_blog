@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-08-17T07:43:00.065293+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2022-08-17T07:43:00.325666+00:00</updated><content type="html"><![CDATA[<ul>
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-08-17T07:49:06.736536+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2022-08-17T07:49:06.929418+00:00</updated><content type="html"><![CDATA[<ul>
 <li>
 <p><strong>怎么实现配置文件的热加载</strong>？
 java1.7中 提供了WatchService来监控系统中文件的变化。该监控是基于操作系统的文件系统监控器，可以监控系统是所有文件的变化，这种监控是无需遍历、无需比较的，是一种基于信号收发的监控，因此效率一定是最高的；现在Java对其进行了包装，可以直接在Java程序中使用OS的文件系统监控器了。</p>
@@ -9,14 +9,273 @@ java1.7中 提供了WatchService来监控系统中文件的变化。该监控是
 场景一：比如系统中的配置文件，一般都是系统启动的时候只加载一次，如果想修改配置文件，还须重启系统。如果系统想热加载一般都会定时轮询对比配置文件是否修改过，如果修改过重新加载。
 场景二：监控磁盘中的文件变化，一般需要把磁盘中的所有文件全部加载一边，定期轮询一遍磁盘，跟上次的文件状态对比。如果文件、目录过多，每次遍历时间都很长，而且还不是实时监控。</p>
 </li>
+<li>
+<p><strong>实现思路</strong>
+监控文件修改及创建事件</p>
+</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2022-08-17T07:43:00.438244+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
+<pre><code>import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import com.google.common.collect.Maps;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 自动热加载配置类
+ *
+ * @author c00566803
+ * @since 2022-08-15
+ */
+@Configuration
+@EnableScheduling
+@Slf4j
+public class AutoReloadConfiguration {
+    /**
+     * 文件监测时间间隔，默认1分钟
+     */
+    public static final long WATCH_INTERVAL = 60 * 1000;
+
+    private static final String PREFIX_FILE = &quot;.&quot;;
+
+    private WatchService watchService;
+
+    private Map&lt;String, Consumer&lt;WatchEvent.Kind&lt;Path&gt;&gt;&gt; consumers = Maps.newHashMap();
+
+    /**
+     * 初始化方法
+     */
+    @PostConstruct
+    public void init() {
+        try {
+            watchService = FileSystems.getDefault().newWatchService();
+
+            // 默认监控classpath下面所有文件和子目录的变化
+            URI uri = AutoReloadConfiguration.class.getResource(&quot;/&quot;).toURI();
+            File baseDir = new File(uri);
+            File[] childDirs = baseDir.listFiles(File::isDirectory);
+            Set&lt;File&gt; watchedDirs = new HashSet&lt;&gt;();
+            watchedDirs.add(baseDir);
+            if (Objects.nonNull(childDirs)) {
+                Arrays.asList(childDirs).forEach(file -&gt; watchedDirs.add(file));
+            }
+            for (File dir : watchedDirs) {
+                Path path = dir.toPath();
+                log.info(&quot;watch path {}&quot;, path);
+
+                // 监控文件修改及创建事件
+                path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_CREATE);
+            }
+        } catch (IOException | URISyntaxException e) {
+            log.error(&quot;error while register watch service&quot;);
+        }
+    }
+
+    /**
+     * 注册监听文件
+     *
+     * @param filePath 文件全路径
+     * @param consumer 回调事件
+     */
+    public void register(String filePath, Consumer&lt;WatchEvent.Kind&lt;Path&gt;&gt; consumer) {
+        log.info(&quot;register watch service of {}&quot;, filePath);
+        if (Objects.isNull(filePath)) {
+            log.warn(&quot;{} is not regular file&quot;, filePath);
+        } else {
+            consumers.put(filePath, consumer);
+            consumers.put(PREFIX_FILE + filePath, consumer);
+        }
+    }
+
+    /**
+     * 定时任务
+     */
+    @Scheduled(fixedRate = WATCH_INTERVAL)
+    public void watch() {
+        WatchKey key = watchService.poll();
+        if (Objects.nonNull(key)) {
+            Map&lt;String, WatchEvent.Kind&lt;Path&gt;&gt; changedFiles = getChangedFiles(key);
+
+            // 处理所有文件变化的事件
+            changedFiles.forEach((s, kind) -&gt; {
+                if (consumers.containsKey(s)) {
+                    log.info(&quot;reload file {}&quot;, s);
+                    consumers.get(s).accept(kind);
+                }
+            });
+
+            // 此处必须reset，不然后续事件无法获取
+            key.reset();
+        }
+    }
+
+    private Map&lt;String, WatchEvent.Kind&lt;Path&gt;&gt; getChangedFiles(WatchKey key) {
+        Map&lt;String, WatchEvent.Kind&lt;Path&gt;&gt; changedFiles = Maps.newHashMap();
+
+        // 获取所有变化的文件，一个文件多次变化默认取最后一个事件
+        for (WatchEvent&lt;?&gt; event : key.pollEvents()) {
+            log.info(&quot;Event kind: {}. File affected: {}.&quot;, event.kind(), event.context());
+            if (event.context() instanceof Path) {
+                Path path = (Path) event.context();
+                Path fileName = path.getFileName();
+                if (Objects.isNull(fileName)) {
+                    log.warn(&quot;{} is not regular file&quot;, path);
+                } else {
+                    changedFiles.put(fileName.toString(), getKind(event));
+                    log.info(&quot;fileName: {}.&quot;, fileName);
+                }
+            }
+        }
+        return changedFiles;
+    }
+
+    @SuppressWarnings({&quot;unchecked&quot;})
+    private WatchEvent.Kind&lt;Path&gt; getKind(WatchEvent&lt;?&gt; event) {
+        return (WatchEvent.Kind&lt;Path&gt;) event.kind();
+    }
+}
+</code></pre>
+<p>配置类：</p>
+<pre><code>import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.WatchEvent;
+import java.util.Properties;
+import java.util.function.Consumer;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 热加载相关配置
+ *
+ * @author c00566803
+ * @since 2022-08-15
+ */
+@Slf4j
+@Component
+public class HotLoadConfiguration {
+    private String configFile = &quot;visualization.properties&quot;;
+
+    @Autowired
+    private HotLoadProperties hotLoadProperties;
+
+    @Autowired
+    private AutoReloadConfiguration autoReloadConfiguration;
+
+    /**
+     * 初始化函数
+     *
+     * @throws IOException IO异常
+     */
+    @PostConstruct
+    public void init() {
+        try {
+            reloadConfig();
+        } catch (IOException e) {
+            log.error(&quot;配置文件加载异常&quot;);
+        }
+        register();
+    }
+
+
+    //加载配置文件
+    private void reloadConfig() throws IOException {
+        Properties properties = new Properties();
+        try (InputStream resource = ClassLoader.getSystemResourceAsStream(configFile)) {
+            InputStreamReader inputStreamReader = new InputStreamReader(resource, &quot;UTF-8&quot;);
+            properties.load(inputStreamReader);
+            String config = JSON.toJSONString(properties);
+            log.info(&quot;before hotLoadProperties = &quot; + hotLoadProperties);
+            HotLoadProperties configSource = JSONObject.parseObject(config, HotLoadProperties.class);
+            BeanUtils.copyProperties(configSource, hotLoadProperties);
+            inputStreamReader.close();
+            log.info(&quot;after hotLoadProperties = &quot; + hotLoadProperties);
+            log.info(&quot;success read config : {}&quot;, configFile);
+        }
+    }
+
+    private void register() {
+        Consumer&lt;WatchEvent.Kind&lt;Path&gt;&gt; consumer = kind -&gt; {
+            try {
+                reloadConfig();
+            } catch (IOException e) {
+                log.error(&quot;reload failed&quot;, e);
+            }
+        };
+
+        // visualization.properties配置文件
+        autoReloadConfiguration.register(configFile, consumer);
+    }
+}
+
+</code></pre>
+<pre><code>import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+import com.alibaba.fastjson.annotation.JSONField;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ * HotLoadProperties 热加载属性
+ *
+ * @author c00566803
+ * @since 2022-08-15
+ */
+@Configuration
+@PropertySource(&quot;classpath:visualization.properties&quot;)
+@Component
+@Getter
+@Setter
+@ToString
+public class HotLoadProperties {
+    @Value(&quot;${task.hag.server}&quot;)
+    @JSONField(name = &quot;task.hag.server&quot;)
+    private String hagServer;
+}
+
+</code></pre>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2022-08-17T07:49:07.044726+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
 <img src="https://user-images.githubusercontent.com/22972346/171575651-1280e4f6-6317-41c3-8703-9816f7f7a0db.png" alt="image" /></p>
 <blockquote>
 <p>Action:
 Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the &gt; dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting &gt; spring.main.allow-circular-references to true</p>
 </blockquote>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2022-08-17T07:43:00.548218+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2022-08-17T07:49:07.129770+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
 <p>####数据类型使用的头字段</p>
 <ul>
 <li><strong>Accept/Accept-Encoding</strong></li>
@@ -36,7 +295,7 @@ Content-Type: text/html; charset=utf-8
 <li>分块传输
 使用&quot;chunked&quot;分块传输编码，在响应头中用头字段**&quot;Transfer-Encoding:chunked&quot;**表示</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-08-17T07:43:00.682225+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-08-17T07:49:07.237498+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
 <ul>
 <li>1××：提示信息，表示目前是协议处理的中间状态，还需要后续的操作；</li>
 <li>2××：成功，报文已经收到并被正确处理；
@@ -74,7 +333,7 @@ Content-Type: text/html; charset=utf-8
 <li>4.HTTP使用了请求-应答模式，客户端主动发起请求，服务器被动回复请求；</li>
 <li>5.HTTP本质上是无状态的，每个请求都是互相独立、毫无关联的，协议不要求客户端或服务器记录请求相关的信息。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-08-17T07:43:00.827720+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-08-17T07:49:07.337387+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
 <p>目前HTTP/1.1规定了八种方法：</p>
 <ul>
 <li><strong>GET</strong>   获取数据</li>
@@ -97,10 +356,10 @@ Content-Type: text/html; charset=utf-8
 <li>标记资源所在位置的path
 <img src="https://user-images.githubusercontent.com/22972346/170391320-d4f8abe7-e655-4dce-a0d0-93fb4ec4fc65.png" alt="image" /></li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-08-17T07:43:00.955831+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-08-17T07:49:07.431976+00:00</updated><content type="html"><![CDATA[<ul>
 <li>并发变成Bug源头</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-08-17T07:43:01.071679+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-08-17T07:49:07.508412+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
 <ul>
 <li>CND
 Content Delivery Network，内容分发网络，工作在客户端和服务器之间，它应用了HTTP协议里的缓存和代理技术，代替源站响应客户端的请求，主要起到缓存加速的作用。</li>
@@ -161,7 +420,7 @@ HTTP协议主要分为一下四大类：
 再搭配其他字段决定缓存策略。
 <strong>Server</strong>：相应字段，告诉客户端当前正在提供Web服务的软件名称和版本号。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-08-17T07:43:01.198144+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-08-17T07:49:07.601865+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
 <p>这整个下单过程，如果全部同步阻塞，那么耗时会增加，用户等待的时间会加长，体验不太好，同时下单过程依赖的链路越长，风险越大。为了加快响应，减少风险，我们可以把一些非必须卡在主链路中的业务拆解出去，让它们和主业务解耦。下单的最关键核心就是要保证库存、用户支付、商家打款的一致性，消息的通知完全可以走异步。这样整个下单过程不会因为通知商家或者通知用户阻塞而阻塞，也不会因为它们失败而提示订单失败。</p>
 <p><img src="https://user-images.githubusercontent.com/22972346/158500145-04bfeb6c-b27f-4688-b465-abe0a8229631.png" alt="image" /></p>
 <p>接下来就是如何设计一个消息引擎了，宏观来看一个消息引擎支持发送、存储、接收就行了。
