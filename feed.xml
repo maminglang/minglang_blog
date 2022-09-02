@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-08-31T05:55:38.888329+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/11</id><title>Java内存区域</title><updated>2022-08-31T05:55:39.079756+00:00</updated><content type="html"><![CDATA[<h2>运行时内存区域</h2>
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-09-02T01:47:27.222646+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/11</id><title>Java内存区域</title><updated>2022-09-02T01:47:27.403851+00:00</updated><content type="html"><![CDATA[<h2>运行时内存区域</h2>
 <ul>
 <li>程序计数器
 当前线程所执行的字节码的行号指示器。字节码解释器通过程序计数器来选取下一条需要执行的字节码指令。</li>
@@ -14,7 +14,16 @@
 </li>
 <li>堆</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/11" rel="alternate"/><category term="虚拟机"/><published>2022-08-31T01:35:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2022-08-31T05:55:39.169334+00:00</updated><content type="html"><![CDATA[<ul>
+<h2>内寸分配与回收策略</h2>
+<ul>
+<li>对象优先在Eden分配</li>
+<li>大对象直接进入老年代</li>
+<li>长期存活的对象进入老年代
+虚拟机采用分代的思想管理内存，那么内存回收的时候就必须能够识别哪些对象应该放在新生代，哪些对象应该放在老年代中。为了实现这点，虚拟机给每个对象设置<strong>年龄计数器</strong>。</li>
+<li>对象的动态年龄判定
+除了年龄计数器值卡，如果在Survivor空间中相同年龄所以对象的总和大于Survivor空间的一般，年龄大于等于该年龄的对象直接进入老年代，无需等到MaxTenuringThreshold中要求的年龄。</li>
+</ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/11" rel="alternate"/><category term="虚拟机"/><published>2022-08-31T01:35:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2022-09-02T01:47:27.496609+00:00</updated><content type="html"><![CDATA[<ul>
 <li>
 <p><strong>怎么实现配置文件的热加载</strong>？
 java1.7中 提供了WatchService来监控系统中文件的变化。该监控是基于操作系统的文件系统监控器，可以监控系统是所有文件的变化，这种监控是无需遍历、无需比较的，是一种基于信号收发的监控，因此效率一定是最高的；现在Java对其进行了包装，可以直接在Java程序中使用OS的文件系统监控器了。</p>
@@ -284,13 +293,13 @@ public class HotLoadProperties {
 }
 
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2022-08-31T05:55:39.262158+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2022-09-02T01:47:27.588755+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
 <img src="https://user-images.githubusercontent.com/22972346/171575651-1280e4f6-6317-41c3-8703-9816f7f7a0db.png" alt="image" /></p>
 <blockquote>
 <p>Action:
 Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the &gt; dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting &gt; spring.main.allow-circular-references to true</p>
 </blockquote>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2022-08-31T05:55:39.342359+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2022-09-02T01:47:27.667884+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
 <p>####数据类型使用的头字段</p>
 <ul>
 <li><strong>Accept/Accept-Encoding</strong></li>
@@ -310,7 +319,7 @@ Content-Type: text/html; charset=utf-8
 <li>分块传输
 使用&quot;chunked&quot;分块传输编码，在响应头中用头字段**&quot;Transfer-Encoding:chunked&quot;**表示</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-08-31T05:55:39.418211+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-09-02T01:47:27.759198+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
 <ul>
 <li>1××：提示信息，表示目前是协议处理的中间状态，还需要后续的操作；</li>
 <li>2××：成功，报文已经收到并被正确处理；
@@ -348,7 +357,7 @@ Content-Type: text/html; charset=utf-8
 <li>4.HTTP使用了请求-应答模式，客户端主动发起请求，服务器被动回复请求；</li>
 <li>5.HTTP本质上是无状态的，每个请求都是互相独立、毫无关联的，协议不要求客户端或服务器记录请求相关的信息。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-08-31T05:55:39.503145+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-09-02T01:47:27.854326+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
 <p>目前HTTP/1.1规定了八种方法：</p>
 <ul>
 <li><strong>GET</strong>   获取数据</li>
@@ -371,10 +380,10 @@ Content-Type: text/html; charset=utf-8
 <li>标记资源所在位置的path
 <img src="https://user-images.githubusercontent.com/22972346/170391320-d4f8abe7-e655-4dce-a0d0-93fb4ec4fc65.png" alt="image" /></li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-08-31T05:55:39.582919+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-09-02T01:47:27.937515+00:00</updated><content type="html"><![CDATA[<ul>
 <li>并发变成Bug源头</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-08-31T05:55:39.669881+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-09-02T01:47:28.013113+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
 <ul>
 <li>CND
 Content Delivery Network，内容分发网络，工作在客户端和服务器之间，它应用了HTTP协议里的缓存和代理技术，代替源站响应客户端的请求，主要起到缓存加速的作用。</li>
@@ -435,7 +444,7 @@ HTTP协议主要分为一下四大类：
 再搭配其他字段决定缓存策略。
 <strong>Server</strong>：相应字段，告诉客户端当前正在提供Web服务的软件名称和版本号。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-08-31T05:55:39.754658+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-09-02T01:47:28.109842+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
 <p>这整个下单过程，如果全部同步阻塞，那么耗时会增加，用户等待的时间会加长，体验不太好，同时下单过程依赖的链路越长，风险越大。为了加快响应，减少风险，我们可以把一些非必须卡在主链路中的业务拆解出去，让它们和主业务解耦。下单的最关键核心就是要保证库存、用户支付、商家打款的一致性，消息的通知完全可以走异步。这样整个下单过程不会因为通知商家或者通知用户阻塞而阻塞，也不会因为它们失败而提示订单失败。</p>
 <p><img src="https://user-images.githubusercontent.com/22972346/158500145-04bfeb6c-b27f-4688-b465-abe0a8229631.png" alt="image" /></p>
 <p>接下来就是如何设计一个消息引擎了，宏观来看一个消息引擎支持发送、存储、接收就行了。
