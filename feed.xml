@@ -1,5 +1,60 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-10-10T00:58:22.090924+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/15</id><title>Redis持久化</title><updated>2022-10-10T00:58:22.292661+00:00</updated><content type="html"><![CDATA[<p>Redis持久化主要有两大机制：<strong>AOF</strong>和<strong>RDB</strong></p>
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-10-10T05:59:03.261488+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/16</id><title>SQL 语法简单检查</title><updated>2022-10-10T05:59:03.475987+00:00</updated><content type="html"><![CDATA[<p>最近遇到一个场景。每次版本升级时，要把增量sql放入配置文件里，同时把增量sql的文件内容，同步到全量sql里。这个过程中，如果由于手误等其他各种人为原因，可能导致sql错误，进而导致后期转测存在问题</p>
+<p>怎么解决呢，最好的办法在代码review阶段，能够检查出语法错误。</p>
+<p>重复造轮子是不现实的。你要检查sql的语法，这个难度相对比较大。这个时候我们发现了<a href="https://github.com/alibaba/druid/wiki/SQL-Parser">Druid MySQL Parser</a></p>
+<blockquote>
+<p>SQL Parser是Druid的一个重要组成部分，Druid内置使用SQL Parser来实现防御SQL注入（WallFilter）、合并统计没有参数化的SQL(StatFilter的mergeSql)、SQL格式化、分库分表。</p>
+</blockquote>
+<blockquote>
+<p>Druid SQL Parser分三个模块：
+Parser parser是将输入文本转换为ast（抽象语法树），parser有包括两个部分，Parser和Lexer，其中Lexer实现词法分析，Parser实现语法分析。
+<a href="https://github.com/alibaba/druid/wiki/Druid_SQL_AST">AST</a> AST是Abstract Syntax Tree的缩写，也就是抽象语法树。AST是parser输出的结果
+Visitor Visitor是遍历AST的手段，是处理AST最方便的模式</p>
+</blockquote>
+<p>有了以上功能，我们就可以构建我们自己的sql语法校验模 块了</p>
+<p>1.创建一个UT 模块</p>
+<p>2.检查sql语法</p>
+<p>1.根据文件解析出sql，按分号分割</p>
+<pre><code>@Before
+public void setUp() throws IOException {
+    File f = new File(&quot;123.sql&quot;);
+    String allSql = Files.toString(f, Charset.forName(&quot;UTF-8&quot;));
+        //根据分号，分割出每一行sql
+    sqlList = allSql.split(&quot;;&quot;);
+}
+</code></pre>
+<p>2.根据druid提供的功能校验sql</p>
+<pre><code>private List&lt;SqlInfo&gt; getResults(String sql){
+    List&lt;SqlInfo&gt; results = new ArrayList&lt;SqlInfo&gt;();
+    MySqlStatementParser parser = new MySqlStatementParser(sqls);
+    //使用parser 把sql文本转换成AST(抽象语法树)
+    List&lt;SQLStatement&gt; stmtList = parser.parseStatementList();
+    StringBuilder out = new StringBuilder();
+    //使用vistor模式访问AST
+    MySqlOutputVisitor visitor = new MySqlOutputVisitor(out);
+    for (SQLStatement stmt : stmtList) {
+        SqlInfo sqlDto = new SqlInfo();
+        stmt.accept(visitor);
+        out.append(&quot;;&quot;);
+        sqlDto.setSql(out.toString());
+        results.add(sqlDto);
+    }
+    return results;
+}
+</code></pre>
+<p>3.执行test,如果语法校验不通过，会抛出异常</p>
+<pre><code>@Test
+public void testDataSQL() {
+    for (String sql : sqlList) {
+        List&lt;SqlInfo&gt; sqlOutput = getResults(sql);
+        for (SqlInfo dto : sqlOutput) {
+            System.out.println(dto.sql);
+        }
+    }
+}
+</code></pre>
+<p>编译阶段，自动执行单元测试，就可以有效的减少由人为失误，导致的sql语法问题了</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/16" rel="alternate"/><category term="技术"/><published>2022-10-10T05:56:36+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/15</id><title>Redis持久化</title><updated>2022-10-10T05:59:03.584990+00:00</updated><content type="html"><![CDATA[<p>Redis持久化主要有两大机制：<strong>AOF</strong>和<strong>RDB</strong></p>
 <ul>
 <li>
 AOF记录的是Redis收到的每一条指令，以文本形式进行保存。<ul>
@@ -34,7 +89,7 @@ AOF文件过大带来的性能问题：</p>
 </ol>
 <h3>如何解决日志文件过大？</h3>
 <p>AOF重写机制就是在重写时（什么时候进行重写？），Redis根据数据库现状新建一个新的AOF文件，也就是说读取数据库中的所有键值对，然后用每一个键值用一条命令去记录它的写入。将旧日志文件中的多条命令进行合并（最终效果）</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/15" rel="alternate"/><category term="Redis"/><published>2022-10-10T00:56:18+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/14</id><title>redis学习 day1</title><updated>2022-10-10T00:58:22.386073+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/192457217-11f702fe-76e2-492e-81ee-714beedfdf16.png" alt="redis问题画像" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/15" rel="alternate"/><category term="Redis"/><published>2022-10-10T00:56:18+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/14</id><title>redis学习 day1</title><updated>2022-10-10T05:59:03.682260+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/192457217-11f702fe-76e2-492e-81ee-714beedfdf16.png" alt="redis问题画像" /></p>
 <h2>Redis的支持的数据</h2>
 <ul>
 <li>String</li>
@@ -59,7 +114,7 @@ AOF文件过大带来的性能问题：</p>
 解决：
 渐进式rehash</li>
 </ol>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/14" rel="alternate"/><category term="Redis"/><published>2022-09-27T09:06:19+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/13</id><title>服务无法启动-oom问题</title><updated>2022-10-10T00:58:22.474264+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/189820555-f4be6124-bc4e-4c87-a07f-548a5cd8480f.png" alt="7C1B6017-539E-4350-A1DC-0DEE0C7CAF11" />
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/14" rel="alternate"/><category term="Redis"/><published>2022-09-27T09:06:19+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/13</id><title>服务无法启动-oom问题</title><updated>2022-10-10T05:59:03.780530+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/189820555-f4be6124-bc4e-4c87-a07f-548a5cd8480f.png" alt="7C1B6017-539E-4350-A1DC-0DEE0C7CAF11" />
 排查思路：日志中显示启动内存不足</p>
 <ul>
 <li>登陆服务器，使用<strong>free -m</strong>查看服务器内存使用情况
@@ -69,7 +124,7 @@ AOF文件过大带来的性能问题：</p>
 发现是由于配置的堆内存的大小远大于服务器存储剩余存储空间，导致服务无法启动。
 将该参数改成笔服务器剩余存储空间较小的值，服务i顺利启动。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/13" rel="alternate"/><category term="技术"/><published>2022-09-13T06:00:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/12</id><title>垃圾收集器</title><updated>2022-10-10T00:58:22.562894+00:00</updated><content type="html"><![CDATA[<h2>对象死亡判断</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/13" rel="alternate"/><category term="技术"/><published>2022-09-13T06:00:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/12</id><title>垃圾收集器</title><updated>2022-10-10T05:59:03.856181+00:00</updated><content type="html"><![CDATA[<h2>对象死亡判断</h2>
 <ul>
 <li>
 <p>引用计数法
@@ -103,7 +158,7 @@ PhantomReference实现虚引用。</li>
 </ul>
 </li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/12" rel="alternate"/><category term="虚拟机"/><published>2022-09-02T01:58:43+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/11</id><title>Java内存区域</title><updated>2022-10-10T00:58:22.648733+00:00</updated><content type="html"><![CDATA[<h2>运行时内存区域</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/12" rel="alternate"/><category term="虚拟机"/><published>2022-09-02T01:58:43+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/11</id><title>Java内存区域</title><updated>2022-10-10T05:59:03.943856+00:00</updated><content type="html"><![CDATA[<h2>运行时内存区域</h2>
 <ul>
 <li>程序计数器
 当前线程所执行的字节码的行号指示器。字节码解释器通过程序计数器来选取下一条需要执行的字节码指令。</li>
@@ -127,7 +182,7 @@ PhantomReference实现虚引用。</li>
 <li>对象的动态年龄判定
 除了年龄计数器值卡，如果在Survivor空间中相同年龄所以对象的总和大于Survivor空间的一般，年龄大于等于该年龄的对象直接进入老年代，无需等到MaxTenuringThreshold中要求的年龄。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/11" rel="alternate"/><category term="虚拟机"/><published>2022-08-31T01:35:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2022-10-10T00:58:22.733100+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/11" rel="alternate"/><category term="虚拟机"/><published>2022-08-31T01:35:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2022-10-10T05:59:04.042059+00:00</updated><content type="html"><![CDATA[<ul>
 <li>
 <p><strong>怎么实现配置文件的热加载</strong>？
 java1.7中 提供了WatchService来监控系统中文件的变化。该监控是基于操作系统的文件系统监控器，可以监控系统是所有文件的变化，这种监控是无需遍历、无需比较的，是一种基于信号收发的监控，因此效率一定是最高的；现在Java对其进行了包装，可以直接在Java程序中使用OS的文件系统监控器了。</p>
@@ -397,13 +452,13 @@ public class HotLoadProperties {
 }
 
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2022-10-10T00:58:22.822989+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2022-10-10T05:59:04.126710+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
 <img src="https://user-images.githubusercontent.com/22972346/171575651-1280e4f6-6317-41c3-8703-9816f7f7a0db.png" alt="image" /></p>
 <blockquote>
 <p>Action:
 Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the &gt; dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting &gt; spring.main.allow-circular-references to true</p>
 </blockquote>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2022-10-10T00:58:22.897082+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2022-10-10T05:59:04.230877+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
 <p>####数据类型使用的头字段</p>
 <ul>
 <li><strong>Accept/Accept-Encoding</strong></li>
@@ -423,7 +478,7 @@ Content-Type: text/html; charset=utf-8
 <li>分块传输
 使用&quot;chunked&quot;分块传输编码，在响应头中用头字段**&quot;Transfer-Encoding:chunked&quot;**表示</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-10-10T00:58:22.973722+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-10-10T05:59:04.320986+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
 <ul>
 <li>1××：提示信息，表示目前是协议处理的中间状态，还需要后续的操作；</li>
 <li>2××：成功，报文已经收到并被正确处理；
@@ -461,7 +516,7 @@ Content-Type: text/html; charset=utf-8
 <li>4.HTTP使用了请求-应答模式，客户端主动发起请求，服务器被动回复请求；</li>
 <li>5.HTTP本质上是无状态的，每个请求都是互相独立、毫无关联的，协议不要求客户端或服务器记录请求相关的信息。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-10-10T00:58:23.060315+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-10-10T05:59:04.405806+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
 <p>目前HTTP/1.1规定了八种方法：</p>
 <ul>
 <li><strong>GET</strong>   获取数据</li>
@@ -484,10 +539,10 @@ Content-Type: text/html; charset=utf-8
 <li>标记资源所在位置的path
 <img src="https://user-images.githubusercontent.com/22972346/170391320-d4f8abe7-e655-4dce-a0d0-93fb4ec4fc65.png" alt="image" /></li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-10-10T00:58:23.149712+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/5</id><title>并发基础</title><updated>2022-10-10T05:59:04.516558+00:00</updated><content type="html"><![CDATA[<ul>
 <li>并发变成Bug源头</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-10-10T00:58:23.230553+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/5" rel="alternate"/><category term="多线程学习"/><published>2022-05-19T08:35:48+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-10-10T05:59:04.600708+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
 <ul>
 <li>CND
 Content Delivery Network，内容分发网络，工作在客户端和服务器之间，它应用了HTTP协议里的缓存和代理技术，代替源站响应客户端的请求，主要起到缓存加速的作用。</li>
@@ -548,7 +603,7 @@ HTTP协议主要分为一下四大类：
 再搭配其他字段决定缓存策略。
 <strong>Server</strong>：相应字段，告诉客户端当前正在提供Web服务的软件名称和版本号。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-10-10T00:58:23.320904+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-10-10T05:59:04.709891+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
 <p>这整个下单过程，如果全部同步阻塞，那么耗时会增加，用户等待的时间会加长，体验不太好，同时下单过程依赖的链路越长，风险越大。为了加快响应，减少风险，我们可以把一些非必须卡在主链路中的业务拆解出去，让它们和主业务解耦。下单的最关键核心就是要保证库存、用户支付、商家打款的一致性，消息的通知完全可以走异步。这样整个下单过程不会因为通知商家或者通知用户阻塞而阻塞，也不会因为它们失败而提示订单失败。</p>
 <p><img src="https://user-images.githubusercontent.com/22972346/158500145-04bfeb6c-b27f-4688-b465-abe0a8229631.png" alt="image" /></p>
 <p>接下来就是如何设计一个消息引擎了，宏观来看一个消息引擎支持发送、存储、接收就行了。
