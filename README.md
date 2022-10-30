@@ -23,7 +23,6 @@ My personal blog using issues and GitHub Actions (随意转载，无需署名)
 ## 多线程学习
 - [wait和notify](https://github.com/maminglang/minglang_blog/issues/20)--2022-10-30
 - [多线程基本知识](https://github.com/maminglang/minglang_blog/issues/19)--2022-10-28
-- [并发基础](https://github.com/maminglang/minglang_blog/issues/5)--2022-05-19
 ## 技术
 - [Java 服务CPU占用高时问题定位方法](https://github.com/maminglang/minglang_blog/issues/17)--2022-10-10
 - [SQL 语法简单检查](https://github.com/maminglang/minglang_blog/issues/16)--2022-10-10
