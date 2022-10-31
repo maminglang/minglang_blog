@@ -7,11 +7,11 @@ My personal blog using issues and GitHub Actions (随意转载，无需署名)
 ## 置顶文章
 - [消息队列Kafka学习](https://github.com/maminglang/minglang_blog/issues/1)--2022-03-16
 ## 最近更新
+- [整数除法](https://github.com/maminglang/minglang_blog/issues/23)--2022-10-31
 - [ThreadLocal使用-上下文](https://github.com/maminglang/minglang_blog/issues/22)--2022-10-31
 - [哈希表](https://github.com/maminglang/minglang_blog/issues/21)--2022-10-30
 - [wait和notify](https://github.com/maminglang/minglang_blog/issues/20)--2022-10-30
 - [多线程基本知识](https://github.com/maminglang/minglang_blog/issues/19)--2022-10-28
-- [RPC学习](https://github.com/maminglang/minglang_blog/issues/18)--2022-10-25
 ## HTTP相关
 - [Head和Body相关](https://github.com/maminglang/minglang_blog/issues/8)--2022-05-27
 - [相应状态码](https://github.com/maminglang/minglang_blog/issues/7)--2022-05-26
@@ -35,6 +35,7 @@ My personal blog using issues and GitHub Actions (随意转载，无需署名)
 </details>
 
 ## 算法
+- [整数除法](https://github.com/maminglang/minglang_blog/issues/23)--2022-10-31
 - [哈希表](https://github.com/maminglang/minglang_blog/issues/21)--2022-10-30
 ## 虚拟机
 - [垃圾收集器](https://github.com/maminglang/minglang_blog/issues/12)--2022-09-02
