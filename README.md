@@ -7,11 +7,11 @@ My personal blog using issues and GitHub Actions (随意转载，无需署名)
 ## 置顶文章
 - [消息队列Kafka学习](https://github.com/maminglang/minglang_blog/issues/1)--2022-03-16
 ## 最近更新
+- [OAuth 2.0](https://github.com/maminglang/minglang_blog/issues/25)--2022-11-09
 - [JWT学习](https://github.com/maminglang/minglang_blog/issues/24)--2022-11-08
 - [整数除法](https://github.com/maminglang/minglang_blog/issues/23)--2022-10-31
 - [ThreadLocal使用-上下文](https://github.com/maminglang/minglang_blog/issues/22)--2022-10-31
 - [哈希表](https://github.com/maminglang/minglang_blog/issues/21)--2022-10-30
-- [wait和notify](https://github.com/maminglang/minglang_blog/issues/20)--2022-10-30
 ## HTTP相关
 - [Head和Body相关](https://github.com/maminglang/minglang_blog/issues/8)--2022-05-27
 - [相应状态码](https://github.com/maminglang/minglang_blog/issues/7)--2022-05-26
