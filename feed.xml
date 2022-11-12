@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-11-09T14:59:15.898899+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/25</id><title>OAuth 2.0</title><updated>2022-11-09T14:59:16.309694+00:00</updated><content type="html"><![CDATA[<h3>简单解释</h3>
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2022-11-12T09:08:04.907277+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/25</id><title>OAuth 2.0</title><updated>2022-11-12T09:08:05.274830+00:00</updated><content type="html"><![CDATA[<h3>简单解释</h3>
 <p>OAuth 就是一种授权机制。数据的所有者告诉系统，同意授权第三方应用进入系统，获取这些数据。系统从而产生一个短期的进入令牌（token），用来代替密码，供第三方应用使用</p>
 <h4>授权方式</h4>
 <ul>
@@ -9,7 +9,270 @@
 <li>密码式（password）：</li>
 <li>客户端凭证（client credentials）</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/25" rel="alternate"/><published>2022-11-09T14:56:37+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/24</id><title>JWT学习</title><updated>2022-11-09T14:59:16.493275+00:00</updated><content type="html"><![CDATA[<p>JSON Web Token（缩写 JWT）是目前最流行的跨域认证解决方案，本文介绍它的原理和用法。</p>
+<h3>代码Demo</h3>
+<p>基于Spring Security Oauth2的SSO单点登录+JWT权限控制实践
+多模块（Multi-Module）项目搭建
+三个应用通过一个多模块的 Maven项目进行组织，其中项目父 pom中需要加入相关依赖如下：</p>
+<pre><code>&lt;dependencies&gt;
+
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-dependencies&lt;/artifactId&gt;
+		&lt;version&gt;2.0.8.RELEASE&lt;/version&gt;
+		&lt;type&gt;pom&lt;/type&gt;
+		&lt;scope&gt;import&lt;/scope&gt;
+	&lt;/dependency&gt;
+
+	&lt;dependency&gt;
+		&lt;groupId&gt;io.spring.platform&lt;/groupId&gt;
+		&lt;artifactId&gt;platform-bom&lt;/artifactId&gt;
+		&lt;version&gt;Cairo-RELEASE&lt;/version&gt;
+		&lt;type&gt;pom&lt;/type&gt;
+		&lt;scope&gt;import&lt;/scope&gt;
+	&lt;/dependency&gt;
+
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+		&lt;version&gt;Finchley.SR2&lt;/version&gt;
+		&lt;type&gt;pom&lt;/type&gt;
+		&lt;scope&gt;import&lt;/scope&gt;
+	&lt;/dependency&gt;
+
+&lt;/dependencies&gt;
+</code></pre>
+<p>项目结构如下：</p>
+<p><img src="https://user-images.githubusercontent.com/22972346/201466967-50864ed2-2a0e-41c3-ba01-30d03eec86ba.png" alt="image" /></p>
+<h4>授权认证中心搭建</h4>
+<p>授权认证中心本质就是一个 Spring Boot应用，因此需要完成几个大步骤：</p>
+<ul>
+<li>pom中添加依赖</li>
+</ul>
+<pre><code>&lt;dependencies&gt;
+	&lt;dependency&gt;
+		&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-cloud-starter-oauth2&lt;/artifactId&gt;
+	&lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<ul>
+<li>项目 yml配置文件：</li>
+</ul>
+<pre><code>server:
+  port: 8085
+  servlet:
+    context-path: /uac
+</code></pre>
+<p>即让授权中心服务启动在本地的 8085端口之上</p>
+<ul>
+<li>创建一个带指定权限的模拟用户</li>
+</ul>
+<pre><code>@Component
+public class SheepUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+
+        if( !&quot;codesheep&quot;.equals(s) )
+            throw new UsernameNotFoundException(&quot;用户&quot; + s + &quot;不存在&quot; );
+
+        return new User( s, passwordEncoder.encode(&quot;123456&quot;), AuthorityUtils.commaSeparatedStringToAuthorityList(&quot;ROLE_NORMAL,ROLE_MEDIUM&quot;));
+    }
+}
+</code></pre>
+<p>这里创建了一个用户名为codesheep，密码 123456的模拟用户，并且赋予了 普通权限（ROLE_NORMAL）和 中等权限（ROLE_MEDIUM）</p>
+<ul>
+<li>认证服务器配置 AuthorizationServerConfig</li>
+</ul>
+<pre><code>@Configuration
+@EnableAuthorizationServer
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+
+        // 定义了两个客户端应用的通行证
+        clients.inMemory()
+                .withClient(&quot;sheep1&quot;)
+                .secret(new BCryptPasswordEncoder().encode(&quot;123456&quot;))
+                .authorizedGrantTypes(&quot;authorization_code&quot;, &quot;refresh_token&quot;)
+                .scopes(&quot;all&quot;)
+                .autoApprove(false)
+                .and()
+                .withClient(&quot;sheep2&quot;)
+                .secret(new BCryptPasswordEncoder().encode(&quot;123456&quot;))
+                .authorizedGrantTypes(&quot;authorization_code&quot;, &quot;refresh_token&quot;)
+                .scopes(&quot;all&quot;)
+                .autoApprove(false);
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+
+        endpoints.tokenStore(jwtTokenStore()).accessTokenConverter(jwtAccessTokenConverter());
+        DefaultTokenServices tokenServices = (DefaultTokenServices) endpoints.getDefaultAuthorizationServerTokenServices();
+        tokenServices.setTokenStore(endpoints.getTokenStore());
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
+        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(1)); // 一天有效期
+        endpoints.tokenServices(tokenServices);
+    }
+
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.tokenKeyAccess(&quot;isAuthenticated()&quot;);
+    }
+
+    @Bean
+    public TokenStore jwtTokenStore() {
+        return new JwtTokenStore(jwtAccessTokenConverter());
+    }
+
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter(){
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey(&quot;testKey&quot;);
+        return converter;
+    }
+}
+</code></pre>
+<p>这里做的最重要的两件事：一是 定义了两个客户端应用的通行证（sheep1和sheep2）；二是 配置 token的具体实现方式为 JWT Token。</p>
+<ul>
+<li>Spring Security安全配置 SpringSecurityConfig</li>
+</ul>
+<pre><code>@Configuration
+public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        authenticationProvider.setHideUserNotFoundExceptions(false);
+        return authenticationProvider;
+    }
+    
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .requestMatchers().antMatchers(&quot;/oauth/**&quot;,&quot;/login/**&quot;,&quot;/logout/**&quot;)
+                .and()
+                .authorizeRequests()
+                .antMatchers(&quot;/oauth/**&quot;).authenticated()
+                .and()
+                .formLogin().permitAll();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+
+}
+</code></pre>
+<h4>客户端应用创建和配置</h4>
+<p>本文创建两个客户端应用：codesheep-client1 和codesheep-client2，由于两者类似，因此只以其一为例进行讲解</p>
+<ul>
+<li>SSO客户端应用配置类 ClientWebsecurityConfigurer</li>
+</ul>
+<pre><code>@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableOAuth2Sso
+public class ClientWebsecurityConfigurer extends WebSecurityConfigurerAdapter {
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.antMatcher(&quot;/**&quot;).authorizeRequests()
+                .anyRequest().authenticated();
+    }
+}
+</code></pre>
+<p>复杂的东西都交给注解了！</p>
+<ul>
+<li>application.yml配置</li>
+</ul>
+<pre><code>auth-server: http://localhost:8085/uac
+server:
+  port: 8086
+
+security:
+  oauth2:
+    client:
+      client-id: sheep1
+      client-secret: 123456
+      user-authorization-uri: ${auth-server}/oauth/authorize
+      access-token-uri: ${auth-server}/oauth/token
+    resource:
+      jwt:
+        key-uri: ${auth-server}/oauth/token_key
+</code></pre>
+<p>这里几项配置都非常重要，都是需要和前面搭建的授权中心进行通信的</p>
+<ul>
+<li>创建测试控制器 TestController</li>
+</ul>
+<pre><code>@RestController
+public class TestController {
+
+   @GetMapping(&quot;/normal&quot;)
+   @PreAuthorize(&quot;hasAuthority(&#x27;ROLE_NORMAL&#x27;)&quot;)
+   public String normal( ) {
+       return &quot;normal permission test success !!!&quot;;
+   }
+
+   @GetMapping(&quot;/medium&quot;)
+   @PreAuthorize(&quot;hasAuthority(&#x27;ROLE_MEDIUM&#x27;)&quot;)
+   public String medium() {
+       return &quot;medium permission test success !!!&quot;;
+   }
+
+   @GetMapping(&quot;/admin&quot;)
+   @PreAuthorize(&quot;hasAuthority(&#x27;ROLE_ADMIN&#x27;)&quot;)
+   public String admin() {
+       return &quot;admin permission test success !!!&quot;;
+   }
+}
+</code></pre>
+<p>此测试控制器包含三个接口，分别需要三种权限（ROLE_NORMAL、ROLE_MEDIUM、ROLE_ADMIN），待会后文会一一测试看效果</p>
+<p>实验验证
+启动授权认证中心 codesheep-server（启动于本地8085端口）
+启动客户端应用 codesheep-client1 （启动于本地8086端口）
+启动客户端应用 codesheep-client2 （启动于本地8087端口）
+首先用浏览器访问客户端1 (codesheep-client1) 的测试接口：localhost:8086/normal，由于此时并没有过用户登录认证，因此会自动跳转到授权中心的登录认证页面：http://localhost:8085/uac/login：
+<img src="https://user-images.githubusercontent.com/22972346/201467085-5f8a6b96-1bc0-4b34-9d08-882861cf3123.png" alt="image" /></p>
+<p>自动跳转到授权中心统一登录页面</p>
+<p>输入用户名 codesheep，密码 123456，即可登录认证，并进入授权页面：</p>
+<p>同意授权后，会自动返回之前客户端的测试接口：
+<img src="https://user-images.githubusercontent.com/22972346/201467106-c93db348-dc5c-414d-8bde-acbc1509dec9.png" alt="image" /></p>
+<p>自动返回客户端接口并调用成功</p>
+<p>此时我们再继续访问客户端1 (codesheep-client1) 的测试接口：localhost:8086/medium，发现已经直接可以调用而无需认证了：</p>
+<p>由于 localhost:8086/normal 和 localhost:8086/medium要求的接口权限，用户codesheep均具备，所以能顺利访问，接下来再访问一下更高权限的接口：localhost:8086/admin：</p>
+<p>无权限访问</p>
+<p>好了，访问客户端1 (codesheep-client1) 的测试接口到此为止，接下来访问外挂的客户端2 (codesheep-client2) 的测试接口：localhost:8087/normal，会发现此时会自动跳到授权页：</p>
+<p>由于用户已通过客户端1登录过_因此再访问客户端2即无需登录_而是直接跳到授权页</p>
+<p>授权完成之后就可以顺利访问客户端2 (codesheep-client2) 的接口：</p>
+<p>顺利访问客户端2的接口</p>
+<p>这就验证了单点登录SSO的功能了！</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/25" rel="alternate"/><published>2022-11-09T14:56:37+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/24</id><title>JWT学习</title><updated>2022-11-12T09:08:05.380937+00:00</updated><content type="html"><![CDATA[<p>JSON Web Token（缩写 JWT）是目前最流行的跨域认证解决方案，本文介绍它的原理和用法。</p>
 <h3>一、跨域认证的问题</h3>
 <p>互联网服务离不开用户认证。一般流程是下面这样。</p>
 <blockquote>
@@ -97,7 +360,7 @@ secret)
 <p>（4）JWT 的最大缺点是，由于服务器不保存 session 状态，因此无法在使用过程中废止某个 token，或者更改 token 的权限。也就是说，一旦 JWT 签发了，在到期之前就会始终有效，除非服务器部署额外的逻辑。</p>
 <p>（5）JWT 本身包含了认证信息，一旦泄露，任何人都可以获得该令牌的所有权限。为了减少盗用，JWT 的有效期应该设置得比较短。对于一些比较重要的权限，使用时应该再次对用户进行认证。</p>
 <p>（6）为了减少盗用，JWT 不应该使用 HTTP 协议明码传输，要使用 HTTPS 协议传输。</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/24" rel="alternate"/><published>2022-11-08T03:34:33+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/23</id><title>整数除法</title><updated>2022-11-09T14:59:16.704272+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/24" rel="alternate"/><published>2022-11-08T03:34:33+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/23</id><title>整数除法</title><updated>2022-11-12T09:08:05.482262+00:00</updated><content type="html"><![CDATA[<ul>
 <li>题目描述：</li>
 </ul>
 <blockquote>
@@ -153,7 +416,7 @@ secret)
         return result;
     }
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/23" rel="alternate"/><category term="算法"/><published>2022-10-31T06:46:37+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/22</id><title>ThreadLocal使用-上下文</title><updated>2022-11-09T14:59:16.900322+00:00</updated><content type="html"><![CDATA[<p>在代码中有个工具类 - <strong>ReqCtxUtil</strong> ，这个类中使用ThreadLocal来传递上下文，且在supplier执行完毕之后移除，防止ThreadLocal占用内存过大而导致oom</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/23" rel="alternate"/><category term="算法"/><published>2022-10-31T06:46:37+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/22</id><title>ThreadLocal使用-上下文</title><updated>2022-11-12T09:08:05.571308+00:00</updated><content type="html"><![CDATA[<p>在代码中有个工具类 - <strong>ReqCtxUtil</strong> ，这个类中使用ThreadLocal来传递上下文，且在supplier执行完毕之后移除，防止ThreadLocal占用内存过大而导致oom</p>
 <pre><code>
 
 /**
@@ -328,7 +591,7 @@ public class ReqCtxUtil extends ComponentAware {
     }
 }
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/22" rel="alternate"/><category term="技术"/><published>2022-10-31T01:56:05+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/21</id><title>哈希表</title><updated>2022-11-09T14:59:17.079964+00:00</updated><content type="html"><![CDATA[<p>###LeteCode刷题</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/22" rel="alternate"/><category term="技术"/><published>2022-10-31T01:56:05+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/21</id><title>哈希表</title><updated>2022-11-12T09:08:05.664163+00:00</updated><content type="html"><![CDATA[<p>###LeteCode刷题</p>
 <ul>
 <li>题号：1 两数之和</li>
 </ul>
@@ -473,7 +736,7 @@ class Solution {
     }
 
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/21" rel="alternate"/><category term="算法"/><published>2022-10-30T11:25:24+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/20</id><title>wait和notify</title><updated>2022-11-09T14:59:17.256158+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/21" rel="alternate"/><category term="算法"/><published>2022-10-30T11:25:24+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/20</id><title>wait和notify</title><updated>2022-11-12T09:08:05.767718+00:00</updated><content type="html"><![CDATA[<ul>
 <li>wait
 线程处于阻塞状态</li>
 <li>notify
@@ -574,7 +837,7 @@ public class MyBlockingQueue {
     }
 }
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/20" rel="alternate"/><category term="多线程学习"/><published>2022-10-30T06:21:45+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/19</id><title>多线程基本知识</title><updated>2022-11-09T14:59:17.439396+00:00</updated><content type="html"><![CDATA[<h4>线程状态</h4>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/20" rel="alternate"/><category term="多线程学习"/><published>2022-10-30T06:21:45+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/19</id><title>多线程基本知识</title><updated>2022-11-12T09:08:05.853499+00:00</updated><content type="html"><![CDATA[<h4>线程状态</h4>
 <p>线程状态由Thread.State枚举类来描述，主要有以下几种状态：</p>
 <ul>
 <li>NEW
@@ -629,7 +892,7 @@ public class MyBlockingQueue {
 <ul>
 <li>TERMINATED</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/19" rel="alternate"/><category term="多线程学习"/><published>2022-10-28T07:12:12+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/18</id><title>RPC学习</title><updated>2022-11-09T14:59:17.613250+00:00</updated><content type="html"><![CDATA[<p>socket，又称<strong>套接字</strong>，是在不同的进程间进行网络通讯的一种协议、约定或者说是规范。
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/19" rel="alternate"/><category term="多线程学习"/><published>2022-10-28T07:12:12+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/18</id><title>RPC学习</title><updated>2022-11-12T09:08:05.943921+00:00</updated><content type="html"><![CDATA[<p>socket，又称<strong>套接字</strong>，是在不同的进程间进行网络通讯的一种协议、约定或者说是规范。
 对于socket编程，它更多的时候像是基于<strong>TCP/UDP</strong>等协议做的一层封装或者说抽象，是一套系统所提供的用于进行网络通信相关编程的接口。
 java中使用socket编程主要分为客户端和服务器端代码，demo如下：</p>
 <pre><code>public class ClientDemo {
@@ -719,7 +982,7 @@ Buffer
 </ul>
 </li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/18" rel="alternate"/><published>2022-10-25T12:11:44+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/17</id><title>Java 服务CPU占用高时问题定位方法</title><updated>2022-11-09T14:59:17.803486+00:00</updated><content type="html"><![CDATA[<p>本文提供了一种比较简单的方法来定位CPU高罪魁祸首代码，在CPU占用高的时候，可以通过以下方法，尽快定位相应的代码行</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/18" rel="alternate"/><published>2022-10-25T12:11:44+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/17</id><title>Java 服务CPU占用高时问题定位方法</title><updated>2022-11-12T09:08:06.041353+00:00</updated><content type="html"><![CDATA[<p>本文提供了一种比较简单的方法来定位CPU高罪魁祸首代码，在CPU占用高的时候，可以通过以下方法，尽快定位相应的代码行</p>
 <h1>1.找到占用cpu高的进程</h1>
 <p>执行top 命令，找到占用CPU高的进程72471
 如下图
@@ -728,7 +991,7 @@ Buffer
 <p><img src="https://user-images.githubusercontent.com/22972346/194806428-22da948d-e858-46a0-8e26-cf4b6ac33d1c.png" alt="image" /></p>
 <h1>3.执行jstack 72471 &gt;72471.log 用来dump出目前代码栈</h1>
 <h1>4. 从72471.log 中根据线程号 1f8b4 查找其中的线程相应的代码栈，则可快速定位相应的业务代码</h1>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/17" rel="alternate"/><category term="技术"/><published>2022-10-10T06:02:39+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/16</id><title>SQL 语法简单检查</title><updated>2022-11-09T14:59:18.003917+00:00</updated><content type="html"><![CDATA[<p>最近遇到一个场景。每次版本升级时，要把增量sql放入配置文件里，同时把增量sql的文件内容，同步到全量sql里。这个过程中，如果由于手误等其他各种人为原因，可能导致sql错误，进而导致后期转测存在问题</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/17" rel="alternate"/><category term="技术"/><published>2022-10-10T06:02:39+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/16</id><title>SQL 语法简单检查</title><updated>2022-11-12T09:08:06.112257+00:00</updated><content type="html"><![CDATA[<p>最近遇到一个场景。每次版本升级时，要把增量sql放入配置文件里，同时把增量sql的文件内容，同步到全量sql里。这个过程中，如果由于手误等其他各种人为原因，可能导致sql错误，进而导致后期转测存在问题</p>
 <p>怎么解决呢，最好的办法在代码review阶段，能够检查出语法错误。</p>
 <p>重复造轮子是不现实的。你要检查sql的语法，这个难度相对比较大。这个时候我们发现了<a href="https://github.com/alibaba/druid/wiki/SQL-Parser">Druid MySQL Parser</a></p>
 <blockquote>
@@ -783,7 +1046,7 @@ public void testDataSQL() {
 }
 </code></pre>
 <p>编译阶段，自动执行单元测试，就可以有效的减少由人为失误，导致的sql语法问题了</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/16" rel="alternate"/><category term="技术"/><published>2022-10-10T05:56:36+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/15</id><title>Redis持久化</title><updated>2022-11-09T14:59:18.171497+00:00</updated><content type="html"><![CDATA[<p>Redis持久化主要有两大机制：<strong>AOF</strong>和<strong>RDB</strong></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/16" rel="alternate"/><category term="技术"/><published>2022-10-10T05:56:36+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/15</id><title>Redis持久化</title><updated>2022-11-12T09:08:06.204812+00:00</updated><content type="html"><![CDATA[<p>Redis持久化主要有两大机制：<strong>AOF</strong>和<strong>RDB</strong></p>
 <ul>
 <li>
 AOF记录的是Redis收到的每一条指令，以文本形式进行保存。<ul>
@@ -818,7 +1081,7 @@ AOF文件过大带来的性能问题：</p>
 </ol>
 <h3>如何解决日志文件过大？</h3>
 <p>AOF重写机制就是在重写时（什么时候进行重写？），Redis根据数据库现状新建一个新的AOF文件，也就是说读取数据库中的所有键值对，然后用每一个键值用一条命令去记录它的写入。将旧日志文件中的多条命令进行合并（最终效果）</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/15" rel="alternate"/><category term="Redis"/><published>2022-10-10T00:56:18+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/14</id><title>redis学习 day1</title><updated>2022-11-09T14:59:18.355889+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/192457217-11f702fe-76e2-492e-81ee-714beedfdf16.png" alt="redis问题画像" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/15" rel="alternate"/><category term="Redis"/><published>2022-10-10T00:56:18+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/14</id><title>redis学习 day1</title><updated>2022-11-12T09:08:06.299505+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/192457217-11f702fe-76e2-492e-81ee-714beedfdf16.png" alt="redis问题画像" /></p>
 <h2>Redis的支持的数据</h2>
 <ul>
 <li>String</li>
@@ -843,7 +1106,7 @@ AOF文件过大带来的性能问题：</p>
 解决：
 渐进式rehash</li>
 </ol>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/14" rel="alternate"/><category term="Redis"/><published>2022-09-27T09:06:19+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/13</id><title>服务无法启动-oom问题</title><updated>2022-11-09T14:59:18.544373+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/189820555-f4be6124-bc4e-4c87-a07f-548a5cd8480f.png" alt="7C1B6017-539E-4350-A1DC-0DEE0C7CAF11" />
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/14" rel="alternate"/><category term="Redis"/><published>2022-09-27T09:06:19+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/13</id><title>服务无法启动-oom问题</title><updated>2022-11-12T09:08:06.392000+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/189820555-f4be6124-bc4e-4c87-a07f-548a5cd8480f.png" alt="7C1B6017-539E-4350-A1DC-0DEE0C7CAF11" />
 排查思路：日志中显示启动内存不足</p>
 <ul>
 <li>登陆服务器，使用<strong>free -m</strong>查看服务器内存使用情况
@@ -853,7 +1116,7 @@ AOF文件过大带来的性能问题：</p>
 发现是由于配置的堆内存的大小远大于服务器存储剩余存储空间，导致服务无法启动。
 将该参数改成比服务器剩余内存空间较小的值，服务顺利启动。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/13" rel="alternate"/><category term="技术"/><published>2022-09-13T06:00:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/12</id><title>垃圾收集器</title><updated>2022-11-09T14:59:18.712917+00:00</updated><content type="html"><![CDATA[<h2>对象死亡判断</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/13" rel="alternate"/><category term="技术"/><published>2022-09-13T06:00:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/12</id><title>垃圾收集器</title><updated>2022-11-12T09:08:06.480339+00:00</updated><content type="html"><![CDATA[<h2>对象死亡判断</h2>
 <ul>
 <li>
 <p>引用计数法
@@ -887,7 +1150,7 @@ PhantomReference实现虚引用。</li>
 </ul>
 </li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/12" rel="alternate"/><category term="虚拟机"/><published>2022-09-02T01:58:43+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/11</id><title>Java内存区域</title><updated>2022-11-09T14:59:18.902552+00:00</updated><content type="html"><![CDATA[<h2>运行时内存区域</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/12" rel="alternate"/><category term="虚拟机"/><published>2022-09-02T01:58:43+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/11</id><title>Java内存区域</title><updated>2022-11-12T09:08:06.560157+00:00</updated><content type="html"><![CDATA[<h2>运行时内存区域</h2>
 <ul>
 <li>程序计数器
 当前线程所执行的字节码的行号指示器。字节码解释器通过程序计数器来选取下一条需要执行的字节码指令。</li>
@@ -911,7 +1174,7 @@ PhantomReference实现虚引用。</li>
 <li>对象的动态年龄判定
 除了年龄计数器值卡，如果在Survivor空间中相同年龄所以对象的总和大于Survivor空间的一般，年龄大于等于该年龄的对象直接进入老年代，无需等到MaxTenuringThreshold中要求的年龄。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/11" rel="alternate"/><category term="虚拟机"/><published>2022-08-31T01:35:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2022-11-09T14:59:19.082238+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/11" rel="alternate"/><category term="虚拟机"/><published>2022-08-31T01:35:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2022-11-12T09:08:06.651943+00:00</updated><content type="html"><![CDATA[<ul>
 <li>
 <p><strong>怎么实现配置文件的热加载</strong>？
 java1.7中 提供了WatchService来监控系统中文件的变化。该监控是基于操作系统的文件系统监控器，可以监控系统是所有文件的变化，这种监控是无需遍历、无需比较的，是一种基于信号收发的监控，因此效率一定是最高的；现在Java对其进行了包装，可以直接在Java程序中使用OS的文件系统监控器了。</p>
@@ -1181,13 +1444,13 @@ public class HotLoadProperties {
 }
 
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2022-11-09T14:59:19.278073+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2022-11-12T09:08:06.738386+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
 <img src="https://user-images.githubusercontent.com/22972346/171575651-1280e4f6-6317-41c3-8703-9816f7f7a0db.png" alt="image" /></p>
 <blockquote>
 <p>Action:
 Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the &gt; dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting &gt; spring.main.allow-circular-references to true</p>
 </blockquote>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2022-11-09T14:59:19.472290+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2022-11-12T09:08:06.816604+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
 <p>####数据类型使用的头字段</p>
 <ul>
 <li><strong>Accept/Accept-Encoding</strong></li>
@@ -1207,7 +1470,7 @@ Content-Type: text/html; charset=utf-8
 <li>分块传输
 使用&quot;chunked&quot;分块传输编码，在响应头中用头字段**&quot;Transfer-Encoding:chunked&quot;**表示</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-11-09T14:59:19.654719+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2022-11-12T09:08:06.894402+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
 <ul>
 <li>1××：提示信息，表示目前是协议处理的中间状态，还需要后续的操作；</li>
 <li>2××：成功，报文已经收到并被正确处理；
@@ -1245,7 +1508,7 @@ Content-Type: text/html; charset=utf-8
 <li>4.HTTP使用了请求-应答模式，客户端主动发起请求，服务器被动回复请求；</li>
 <li>5.HTTP本质上是无状态的，每个请求都是互相独立、毫无关联的，协议不要求客户端或服务器记录请求相关的信息。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-11-09T14:59:19.840171+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2022-11-12T09:08:06.986315+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
 <p>目前HTTP/1.1规定了八种方法：</p>
 <ul>
 <li><strong>GET</strong>   获取数据</li>
@@ -1268,7 +1531,7 @@ Content-Type: text/html; charset=utf-8
 <li>标记资源所在位置的path
 <img src="https://user-images.githubusercontent.com/22972346/170391320-d4f8abe7-e655-4dce-a0d0-93fb4ec4fc65.png" alt="image" /></li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-11-09T14:59:20.030262+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2022-11-12T09:08:07.065234+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
 <ul>
 <li>CND
 Content Delivery Network，内容分发网络，工作在客户端和服务器之间，它应用了HTTP协议里的缓存和代理技术，代替源站响应客户端的请求，主要起到缓存加速的作用。</li>
@@ -1329,7 +1592,7 @@ HTTP协议主要分为一下四大类：
 再搭配其他字段决定缓存策略。
 <strong>Server</strong>：相应字段，告诉客户端当前正在提供Web服务的软件名称和版本号。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-11-09T14:59:20.218171+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2022-11-12T09:08:07.173824+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
 <p>这整个下单过程，如果全部同步阻塞，那么耗时会增加，用户等待的时间会加长，体验不太好，同时下单过程依赖的链路越长，风险越大。为了加快响应，减少风险，我们可以把一些非必须卡在主链路中的业务拆解出去，让它们和主业务解耦。下单的最关键核心就是要保证库存、用户支付、商家打款的一致性，消息的通知完全可以走异步。这样整个下单过程不会因为通知商家或者通知用户阻塞而阻塞，也不会因为它们失败而提示订单失败。</p>
 <p><img src="https://user-images.githubusercontent.com/22972346/158500145-04bfeb6c-b27f-4688-b465-abe0a8229631.png" alt="image" /></p>
 <p>接下来就是如何设计一个消息引擎了，宏观来看一个消息引擎支持发送、存储、接收就行了。
