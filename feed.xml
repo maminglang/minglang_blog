@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2023-08-09T07:25:19.699272+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/41</id><title>Java中的泛型</title><updated>2023-08-09T07:25:19.973700+00:00</updated><content type="html"><![CDATA[<p>泛型，Generics，经常看到代码中用到，做下总结。</p>
+<feed xmlns="http://www.w3.org/2005/Atom"><id>https://github.com/maminglang/minglang_blog</id><title>RSS feed of maminglang's minglang_blog</title><updated>2023-08-09T08:28:10.796529+00:00</updated><author><name>maminglang</name><email>1622695094@qq.com</email></author><link href="https://github.com/maminglang/minglang_blog"/><link href="https://raw.githubusercontent.com/maminglang/minglang_blog/master/feed.xml" rel="self"/><generator uri="https://lkiesow.github.io/python-feedgen" version="0.9.0">python-feedgen</generator><entry><id>https://github.com/maminglang/minglang_blog/issues/41</id><title>Java中的泛型</title><updated>2023-08-09T08:28:11.115502+00:00</updated><content type="html"><![CDATA[<p>泛型，Generics，经常看到代码中用到，做下总结。</p>
 <h4>什么是泛型？</h4>
-<p>泛型是JDK5引入的一个新特性，其提供了<strong>编译时类型安全检测机制</strong>，该机制允许开发者在编译的时候检测到非法的类型。</p>
+<p>泛型是JDK5引入的一个新特性，其提供了<strong>编译时类型安全检测机制</strong>，该机制允许开发者在编译的时候检测到非法的类型。
+泛型的本质是<a href="https://www.zhihu.com/search?q=%E5%8F%82%E6%95%B0%E5%8C%96%E7%B1%BB%E5%9E%8B&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2525576071%7D">参数化类型</a>，即给类型指定一个参数，然后在使用时再指定此参数具体的值，那样这个类型就可以在使用时决定了。这种参数类型可以用在类、接口和方法中，分别被称为泛型类、泛型接口、泛型方法。</p>
 <h4>泛型分类</h4>
 <p>泛型按照使用方法分为一下三种情况：</p>
 <ul>
@@ -10,9 +11,17 @@
 <li>泛型方法</li>
 </ul>
 <h5>泛型类</h5>
-<p>泛型允许我们在类名后边使用泛型参数/n
-使用泛型参数的地方：声明变量、形参、返回值和强制类型转换，但是不能用于构造器。</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/41" rel="alternate"/><category term="面试相关"/><published>2023-08-09T07:24:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/39</id><title>定时任务</title><updated>2023-08-09T07:25:20.077986+00:00</updated><content type="html"><![CDATA[<p>遇到两种定时任务执行，一种是每隔固定间隔进行定时执行，一种是在固定时间进行任务执行，梳理出来两种方法仅供参考：</p>
+<p>泛型允许我们在类名后边使用泛型参数
+使用泛型参数的地方：声明变量、形参、返回值和强制类型转换，但是不能用于构造器。
+使用<strong>泛型类</strong>的时候，类型必须被具体类型或者定义泛型类时的类型参数所确定。</p>
+<p>泛型接口的定义与泛型类差不多，在使用的时候也是需要确定具体类型</p>
+<h4>泛型通配符</h4>
+<ul>
+<li>无界通配符 &lt;?&gt;</li>
+<li>固定上界通配符 &lt;? extends E&gt;</li>
+<li>固定下边界通配符 &lt;? super E&gt;</li>
+</ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/41" rel="alternate"/><category term="面试相关"/><published>2023-08-09T07:24:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/39</id><title>定时任务</title><updated>2023-08-09T08:28:11.228039+00:00</updated><content type="html"><![CDATA[<p>遇到两种定时任务执行，一种是每隔固定间隔进行定时执行，一种是在固定时间进行任务执行，梳理出来两种方法仅供参考：</p>
 <ul>
 <li>使用定时线程池完成间隔固定时间任务执行，主要的功能是完成一个简单的缓存和定时删除。
 该缓存提供两种构造器初始化方式，无参构造时候，默认放入的key-value永不会删除</li>
@@ -286,7 +295,7 @@ public class LunarFestivalTask implements SchedulingConfigurer, Runnable {
 }
 
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/39" rel="alternate"/><category term="技术"/><published>2023-06-02T00:34:59+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/38</id><title>事务相关问题</title><updated>2023-08-09T07:25:20.176433+00:00</updated><content type="html"><![CDATA[<p>前几天面试的时候被问到<strong>事务</strong>相关的问题，回答的一塌糊涂。考虑到对事务的了解过于模糊，因此下一下相关问题。</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/39" rel="alternate"/><category term="技术"/><published>2023-06-02T00:34:59+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/38</id><title>事务相关问题</title><updated>2023-08-09T08:28:11.355282+00:00</updated><content type="html"><![CDATA[<p>前几天面试的时候被问到<strong>事务</strong>相关的问题，回答的一塌糊涂。考虑到对事务的了解过于模糊，因此下一下相关问题。</p>
 <ul>
 <li>事务的隔离级别
 事务的隔离级别是对事务四大特性中隔离性的具体体现，使用事务隔离级别可以控制并发事务在同时执行时的某种行为。
@@ -304,13 +313,13 @@ MySql中事务隔离级别主要有：<strong>读未提交、读已提交、可�
      - Propagation.NESTED：如果当前存在事务，则创建一个事务作为当前事务的嵌套事务来运行；如果当前没有事务，则该取值等价于 PROPAGATION_REQUIRED。
 </code></pre>
 <p><strong>事务隔离级别描述的是纵向事务并发调用时的行为模式，而事务传播机制描述的是横向事务传递时的行为模式。</strong></p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/38" rel="alternate"/><category term="技术"/><published>2023-05-29T02:54:10+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/36</id><title>java内存模型</title><updated>2023-08-09T07:25:20.277159+00:00</updated><content type="html"><![CDATA[<p>java内存模型，区别于jvm的内存模型。前者描述的是java语言如何与内存进行信息交互，后者则是描述jvm内存是如何分布的。</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/38" rel="alternate"/><category term="技术"/><published>2023-05-29T02:54:10+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/36</id><title>java内存模型</title><updated>2023-08-09T08:28:11.457166+00:00</updated><content type="html"><![CDATA[<p>java内存模型，区别于jvm的内存模型。前者描述的是java语言如何与内存进行信息交互，后者则是描述jvm内存是如何分布的。</p>
 <ul>
 <li>Java 内存模型是并发编程的基础，
 <a href="https://www.51cto.com/article/658158.html">https://www.51cto.com/article/658158.html</a>
 <a href="https://www.cnblogs.com/chanshuyi/p/deep-insight-of-java-memory-model.html">https://www.cnblogs.com/chanshuyi/p/deep-insight-of-java-memory-model.html</a></li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/36" rel="alternate"/><published>2023-03-07T07:27:10+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/35</id><title>JVM总结</title><updated>2023-08-09T07:25:20.364643+00:00</updated><content type="html"><![CDATA[<p>本文的内容主要总结于《深入了解JVM虚拟机》一书，算是对于所看的内容进行一个初步的总结。</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/36" rel="alternate"/><published>2023-03-07T07:27:10+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/35</id><title>JVM总结</title><updated>2023-08-09T08:28:11.535214+00:00</updated><content type="html"><![CDATA[<p>本文的内容主要总结于《深入了解JVM虚拟机》一书，算是对于所看的内容进行一个初步的总结。</p>
 <h3>1.什么是虚拟机</h3>
 <p>Java虚拟机是一个执行Java字节码的虚拟机进程。Java源文件（.java）被编译成能被虚拟机执行的字节码文件（.class）。也正是Java虚拟机的存在，使得java程序能够忽略平台差异性，能够做到一次编译，到处运行。</p>
 <h3>2.JVM有哪些部分组成</h3>
@@ -436,7 +445,7 @@ MySql中事务隔离级别主要有：<strong>读未提交、读已提交、可�
 </ul>
 </li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/35" rel="alternate"/><category term="虚拟机"/><published>2023-01-03T13:29:05+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/34</id><title>哈希表</title><updated>2023-08-09T07:25:20.498980+00:00</updated><content type="html"><![CDATA[<p>在Java中，哈希表常用的数据结构就是Map和Set，我们通过几个算法题目加深对这类数据结构的应用。</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/35" rel="alternate"/><category term="虚拟机"/><published>2023-01-03T13:29:05+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/34</id><title>哈希表</title><updated>2023-08-09T08:28:11.638545+00:00</updated><content type="html"><![CDATA[<p>在Java中，哈希表常用的数据结构就是Map和Set，我们通过几个算法题目加深对这类数据结构的应用。</p>
 <blockquote>
 <p><a href="https://leetcode.cn/problems/two-sum/">1. 两数之和</a>
 给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 target  的那 两个 整数，并返回它们的数组下标。
@@ -609,7 +618,7 @@ nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
     }
 }
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/34" rel="alternate"/><category term="算法"/><published>2022-12-15T01:50:55+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/33</id><title>二叉树</title><updated>2023-08-09T07:25:20.604174+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/34" rel="alternate"/><category term="算法"/><published>2022-12-15T01:50:55+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/33</id><title>二叉树</title><updated>2023-08-09T08:28:11.737762+00:00</updated><content type="html"><![CDATA[<ul>
 <li>二叉树的概念</li>
 <li>满二叉树</li>
 <li>完全二叉树</li>
@@ -618,7 +627,7 @@ nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
 </ul>
 <h3>二叉树的村塾</h3>
 <h3>二叉树䣌遍历</h3>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/33" rel="alternate"/><category term="算法"/><published>2022-12-08T07:24:16+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/32</id><title>IO模型</title><updated>2023-08-09T07:25:20.706273+00:00</updated><content type="html"><![CDATA[<h3>I/O模型</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/33" rel="alternate"/><category term="算法"/><published>2022-12-08T07:24:16+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/32</id><title>IO模型</title><updated>2023-08-09T08:28:11.844486+00:00</updated><content type="html"><![CDATA[<h3>I/O模型</h3>
 <p>I/O模型简单理解就是：采用什么样的通道进行数据的发送和接受，这很大程度上决定了程序的性能。
 Java支持的3中网络编程模型I/O模式主要分为以下三种：<strong>BIO(同步并阻塞)</strong>、<strong>NIO（同步非阻塞</strong>、<strong>AIO（异步非阻塞）</strong></p>
 <h4>阻塞与非阻塞</h4>
@@ -713,7 +722,7 @@ Java支持的3中网络编程模型I/O模式主要分为以下三种：<strong>B
 </ul>
 <h4>三大组件</h4>
 <p>三大组件之间的关系：</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/32" rel="alternate"/><category term="Nio和Netty学习"/><published>2022-12-08T07:23:13+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/31</id><title>BlockQueue</title><updated>2023-08-09T07:25:20.797539+00:00</updated><content type="html"><![CDATA[<pre><code>public interface BlockingQueue&lt;E&gt; extends Queue&lt;E&gt; {
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/32" rel="alternate"/><category term="Nio和Netty学习"/><published>2022-12-08T07:23:13+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/31</id><title>BlockQueue</title><updated>2023-08-09T08:28:11.963249+00:00</updated><content type="html"><![CDATA[<pre><code>public interface BlockingQueue&lt;E&gt; extends Queue&lt;E&gt; {
 //添加元素
 boolean add(E e);
 boolean offer(E e);
@@ -836,7 +845,7 @@ public ArrayBlockingQueue(int capacity, boolean fair) {
     /** Wait queue for waiting puts */
     private final Condition notFull = putLock.newCondition()
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/31" rel="alternate"/><category term="Java源码"/><published>2022-12-06T13:17:12+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/30</id><title>多线程交替打印数字</title><updated>2023-08-09T07:25:20.926958+00:00</updated><content type="html"><![CDATA[<p>使用ReetranLock和condition实现</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/31" rel="alternate"/><category term="Java源码"/><published>2022-12-06T13:17:12+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/30</id><title>多线程交替打印数字</title><updated>2023-08-09T08:28:12.076472+00:00</updated><content type="html"><![CDATA[<p>使用ReetranLock和condition实现</p>
 <pre><code>public class Test {
 
     static int count = 0;
@@ -886,9 +895,9 @@ public ArrayBlockingQueue(int capacity, boolean fair) {
 }
 
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/30" rel="alternate"/><category term="多线程学习"/><published>2022-12-05T06:42:14+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/29</id><title>集合相关源码阅读</title><updated>2023-08-09T07:25:21.039188+00:00</updated><content type="html"><![CDATA[<h3>ArrayList</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/30" rel="alternate"/><category term="多线程学习"/><published>2022-12-05T06:42:14+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/29</id><title>集合相关源码阅读</title><updated>2023-08-09T08:28:12.237590+00:00</updated><content type="html"><![CDATA[<h3>ArrayList</h3>
 <h3>HashMap</h3>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/29" rel="alternate"/><category term="Java源码"/><published>2022-12-01T00:58:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/28</id><title>DMQ相关</title><updated>2023-08-09T07:25:21.171720+00:00</updated><content type="html"><![CDATA[<h3>Apache Kafka架构</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/29" rel="alternate"/><category term="Java源码"/><published>2022-12-01T00:58:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/28</id><title>DMQ相关</title><updated>2023-08-09T08:28:12.341235+00:00</updated><content type="html"><![CDATA[<h3>Apache Kafka架构</h3>
 <p><img src="https://user-images.githubusercontent.com/22972346/204415347-8699fd43-627d-4b5c-a897-9bdb8895118d.png" alt="image" />
 如图所示，Kafka的架构中包括Producer、Kafka-Broker、ZooKeeper、Consumer。</p>
 <ul>
@@ -968,7 +977,7 @@ public ArrayBlockingQueue(int capacity, boolean fair) {
 </code></pre>
 <p>刚好，Apache Pulsar可以解决上面的问题，且可以兼容Kafka的API，客户端可以直接使用Kafka的Client，无需升级SDK
 <img src="https://user-images.githubusercontent.com/22972346/204416098-de847678-719e-4a16-ab2f-c222955a5104.png" alt="image" /></p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/28" rel="alternate"/><category term="Kafka"/><published>2022-11-29T08:34:56+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/27</id><title>高性能IO模型</title><updated>2023-08-09T07:25:21.283771+00:00</updated><content type="html"><![CDATA[<p>Redis是单线程，主要是指<strong>Redis的网络IO和键值对读写是由一个线程来完成的，这也是Redis对外提供键值存储服务的主要流程</strong>。但是Redis的其他功能，比如持久化、异步删除、集群数据同步等，其实是由额外的线程执行的。</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/28" rel="alternate"/><category term="Kafka"/><published>2022-11-29T08:34:56+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/27</id><title>高性能IO模型</title><updated>2023-08-09T08:28:12.453871+00:00</updated><content type="html"><![CDATA[<p>Redis是单线程，主要是指<strong>Redis的网络IO和键值对读写是由一个线程来完成的，这也是Redis对外提供键值存储服务的主要流程</strong>。但是Redis的其他功能，比如持久化、异步删除、集群数据同步等，其实是由额外的线程执行的。</p>
 <h4>Redis的单线程设计机制以及多路复用机制</h4>
 <h5>为什么采用单线程设计</h5>
 <ul>
@@ -982,7 +991,7 @@ public ArrayBlockingQueue(int capacity, boolean fair) {
 <li>多路复用机制
 Redis单线程处理IO请求性能瓶颈主要包括2个方面： 1、任意一个请求在server中一旦发生耗时，都会影响整个server的性能，也就是说后面的请求都要等前面这个耗时请求处理完成，自己才能被处理到。耗时的操作包括以下几种： a、操作bigkey：写入一个bigkey在分配内存时需要消耗更多的时间，同样，删除bigkey释放内存同样会产生耗时； b、使用复杂度过高的命令：例如SORT/SUNION/ZUNIONSTORE，或者O(N)命令，但是N很大，例如lrange key 0 -1一次查询全量数据； c、大量key集中过期：Redis的过期机制也是在主线程中执行的，大量key集中过期会导致处理一个请求时，耗时都在删除过期key，耗时变长； d、淘汰策略：淘汰策略也是在主线程执行的，当内存超过Redis内存上限后，每次写入都需要淘汰一些key，也会造成耗时变长； e、AOF刷盘开启always机制：每次写入都需要把这个操作刷到磁盘，写磁盘的速度远比写内存慢，会拖慢Redis的性能； f、主从全量同步生成RDB：虽然采用fork子进程生成数据快照，但fork这一瞬间也是会阻塞整个线程的，实例越大，阻塞时间越久； 2、并发量非常大时，单线程读写客户端IO数据存在性能瓶颈，虽然采用IO多路复用机制，但是读写客户端数据依旧是同步IO，只能单线程依次读取客户端的数据，无法利用到CPU多核。 针对问题1，一方面需要业务人员去规避，一方面Redis在4.0推出了lazy-free机制，把bigkey释放内存的耗时操作放在了异步线程中执行，降低对主线程的影响。 针对问题2，Redis在6.0推出了多线程，可以在高并发场景下利用CPU多核多线程读写客户端数据，进一步提升server性能，当然，只是针对客户端的读写是并行的，每个命令的真正操作依旧是单线程的</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/27" rel="alternate"/><category term="Redis"/><published>2022-11-22T06:16:05+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/25</id><title>OAuth 2.0</title><updated>2023-08-09T07:25:21.381992+00:00</updated><content type="html"><![CDATA[<h3>简单解释</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/27" rel="alternate"/><category term="Redis"/><published>2022-11-22T06:16:05+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/25</id><title>OAuth 2.0</title><updated>2023-08-09T08:28:12.547382+00:00</updated><content type="html"><![CDATA[<h3>简单解释</h3>
 <p>OAuth 就是一种授权机制。数据的所有者告诉系统，同意授权第三方应用进入系统，获取这些数据。系统从而产生一个短期的进入令牌（token），用来代替密码，供第三方应用使用</p>
 <h4>授权方式</h4>
 <ul>
@@ -1255,7 +1264,7 @@ public class TestController {
 <p>授权完成之后就可以顺利访问客户端2 (codesheep-client2) 的接口：</p>
 <p>顺利访问客户端2的接口</p>
 <p>这就验证了单点登录SSO的功能了！</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/25" rel="alternate"/><category term="Oauth"/><published>2022-11-09T14:56:37+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/24</id><title>JWT学习</title><updated>2023-08-09T07:25:21.485596+00:00</updated><content type="html"><![CDATA[<p>JSON Web Token（缩写 JWT）是目前最流行的跨域认证解决方案，本文介绍它的原理和用法。</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/25" rel="alternate"/><category term="Oauth"/><published>2022-11-09T14:56:37+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/24</id><title>JWT学习</title><updated>2023-08-09T08:28:12.644448+00:00</updated><content type="html"><![CDATA[<p>JSON Web Token（缩写 JWT）是目前最流行的跨域认证解决方案，本文介绍它的原理和用法。</p>
 <h3>一、跨域认证的问题</h3>
 <p>互联网服务离不开用户认证。一般流程是下面这样。</p>
 <blockquote>
@@ -1343,7 +1352,7 @@ secret)
 <p>（4）JWT 的最大缺点是，由于服务器不保存 session 状态，因此无法在使用过程中废止某个 token，或者更改 token 的权限。也就是说，一旦 JWT 签发了，在到期之前就会始终有效，除非服务器部署额外的逻辑。</p>
 <p>（5）JWT 本身包含了认证信息，一旦泄露，任何人都可以获得该令牌的所有权限。为了减少盗用，JWT 的有效期应该设置得比较短。对于一些比较重要的权限，使用时应该再次对用户进行认证。</p>
 <p>（6）为了减少盗用，JWT 不应该使用 HTTP 协议明码传输，要使用 HTTPS 协议传输。</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/24" rel="alternate"/><category term="Oauth"/><published>2022-11-08T03:34:33+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/23</id><title>整数除法</title><updated>2023-08-09T07:25:21.592889+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/24" rel="alternate"/><category term="Oauth"/><published>2022-11-08T03:34:33+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/23</id><title>整数除法</title><updated>2023-08-09T08:28:12.776522+00:00</updated><content type="html"><![CDATA[<ul>
 <li>题目描述：</li>
 </ul>
 <blockquote>
@@ -1399,7 +1408,7 @@ secret)
         return result;
     }
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/23" rel="alternate"/><category term="算法"/><published>2022-10-31T06:46:37+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/22</id><title>ThreadLocal使用-上下文</title><updated>2023-08-09T07:25:21.702545+00:00</updated><content type="html"><![CDATA[<p>在代码中有个工具类 - <strong>ReqCtxUtil</strong> ，这个类中使用ThreadLocal来传递上下文，且在supplier执行完毕之后移除，防止ThreadLocal占用内存过大而导致oom</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/23" rel="alternate"/><category term="算法"/><published>2022-10-31T06:46:37+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/22</id><title>ThreadLocal使用-上下文</title><updated>2023-08-09T08:28:12.885081+00:00</updated><content type="html"><![CDATA[<p>在代码中有个工具类 - <strong>ReqCtxUtil</strong> ，这个类中使用ThreadLocal来传递上下文，且在supplier执行完毕之后移除，防止ThreadLocal占用内存过大而导致oom</p>
 <pre><code>
 
 /**
@@ -1574,7 +1583,7 @@ public class ReqCtxUtil extends ComponentAware {
     }
 }
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/22" rel="alternate"/><category term="技术"/><published>2022-10-31T01:56:05+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/21</id><title>哈希表</title><updated>2023-08-09T07:25:21.812000+00:00</updated><content type="html"><![CDATA[<p>###LeteCode刷题</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/22" rel="alternate"/><category term="技术"/><published>2022-10-31T01:56:05+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/21</id><title>哈希表</title><updated>2023-08-09T08:28:13.114246+00:00</updated><content type="html"><![CDATA[<p>###LeteCode刷题</p>
 <ul>
 <li>题号：1 两数之和</li>
 </ul>
@@ -1719,7 +1728,7 @@ class Solution {
     }
 
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/21" rel="alternate"/><category term="算法"/><published>2022-10-30T11:25:24+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/20</id><title>wait和notify</title><updated>2023-08-09T07:25:21.913005+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/21" rel="alternate"/><category term="算法"/><published>2022-10-30T11:25:24+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/20</id><title>wait和notify</title><updated>2023-08-09T08:28:13.261985+00:00</updated><content type="html"><![CDATA[<ul>
 <li>wait
 线程处于阻塞状态</li>
 <li>notify
@@ -1820,7 +1829,7 @@ public class MyBlockingQueue {
     }
 }
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/20" rel="alternate"/><category term="多线程学习"/><published>2022-10-30T06:21:45+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/19</id><title>多线程基本知识</title><updated>2023-08-09T07:25:22.008506+00:00</updated><content type="html"><![CDATA[<h4>线程状态</h4>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/20" rel="alternate"/><category term="多线程学习"/><published>2022-10-30T06:21:45+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/19</id><title>多线程基本知识</title><updated>2023-08-09T08:28:13.356570+00:00</updated><content type="html"><![CDATA[<h4>线程状态</h4>
 <p>线程状态由Thread.State枚举类来描述，主要有以下几种状态：</p>
 <ul>
 <li>NEW
@@ -1875,7 +1884,7 @@ public class MyBlockingQueue {
 <ul>
 <li>TERMINATED</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/19" rel="alternate"/><category term="多线程学习"/><published>2022-10-28T07:12:12+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/18</id><title>RPC学习</title><updated>2023-08-09T07:25:22.107372+00:00</updated><content type="html"><![CDATA[<p>socket，又称<strong>套接字</strong>，是在不同的进程间进行网络通讯的一种协议、约定或者说是规范。
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/19" rel="alternate"/><category term="多线程学习"/><published>2022-10-28T07:12:12+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/18</id><title>RPC学习</title><updated>2023-08-09T08:28:13.469326+00:00</updated><content type="html"><![CDATA[<p>socket，又称<strong>套接字</strong>，是在不同的进程间进行网络通讯的一种协议、约定或者说是规范。
 对于socket编程，它更多的时候像是基于<strong>TCP/UDP</strong>等协议做的一层封装或者说抽象，是一套系统所提供的用于进行网络通信相关编程的接口。
 java中使用socket编程主要分为客户端和服务器端代码，demo如下：</p>
 <pre><code>public class ClientDemo {
@@ -1965,7 +1974,7 @@ Buffer
 </ul>
 </li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/18" rel="alternate"/><category term="Nio和Netty学习"/><published>2022-10-25T12:11:44+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/17</id><title>Java 服务CPU占用高时问题定位方法</title><updated>2023-08-09T07:25:22.216199+00:00</updated><content type="html"><![CDATA[<p>本文提供了一种比较简单的方法来定位CPU高罪魁祸首代码，在CPU占用高的时候，可以通过以下方法，尽快定位相应的代码行</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/18" rel="alternate"/><category term="Nio和Netty学习"/><published>2022-10-25T12:11:44+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/17</id><title>Java 服务CPU占用高时问题定位方法</title><updated>2023-08-09T08:28:13.560211+00:00</updated><content type="html"><![CDATA[<p>本文提供了一种比较简单的方法来定位CPU高罪魁祸首代码，在CPU占用高的时候，可以通过以下方法，尽快定位相应的代码行</p>
 <h1>1.找到占用cpu高的进程</h1>
 <p>执行top 命令，找到占用CPU高的进程72471
 如下图
@@ -1974,7 +1983,7 @@ Buffer
 <p><img src="https://user-images.githubusercontent.com/22972346/194806428-22da948d-e858-46a0-8e26-cf4b6ac33d1c.png" alt="image" /></p>
 <h1>3.执行jstack 72471 &gt;72471.log 用来dump出目前代码栈</h1>
 <h1>4. 从72471.log 中根据线程号 1f8b4 查找其中的线程相应的代码栈，则可快速定位相应的业务代码</h1>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/17" rel="alternate"/><category term="技术"/><published>2022-10-10T06:02:39+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/16</id><title>SQL 语法简单检查</title><updated>2023-08-09T07:25:22.322756+00:00</updated><content type="html"><![CDATA[<p>最近遇到一个场景。每次版本升级时，要把增量sql放入配置文件里，同时把增量sql的文件内容，同步到全量sql里。这个过程中，如果由于手误等其他各种人为原因，可能导致sql错误，进而导致后期转测存在问题</p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/17" rel="alternate"/><category term="技术"/><published>2022-10-10T06:02:39+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/16</id><title>SQL 语法简单检查</title><updated>2023-08-09T08:28:13.679835+00:00</updated><content type="html"><![CDATA[<p>最近遇到一个场景。每次版本升级时，要把增量sql放入配置文件里，同时把增量sql的文件内容，同步到全量sql里。这个过程中，如果由于手误等其他各种人为原因，可能导致sql错误，进而导致后期转测存在问题</p>
 <p>怎么解决呢，最好的办法在代码review阶段，能够检查出语法错误。</p>
 <p>重复造轮子是不现实的。你要检查sql的语法，这个难度相对比较大。这个时候我们发现了<a href="https://github.com/alibaba/druid/wiki/SQL-Parser">Druid MySQL Parser</a></p>
 <blockquote>
@@ -2029,7 +2038,7 @@ public void testDataSQL() {
 }
 </code></pre>
 <p>编译阶段，自动执行单元测试，就可以有效的减少由人为失误，导致的sql语法问题了</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/16" rel="alternate"/><category term="技术"/><published>2022-10-10T05:56:36+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/15</id><title>Redis持久化</title><updated>2023-08-09T07:25:22.416388+00:00</updated><content type="html"><![CDATA[<p>Redis持久化主要有两大机制：<strong>AOF</strong>和<strong>RDB</strong></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/16" rel="alternate"/><category term="技术"/><published>2022-10-10T05:56:36+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/15</id><title>Redis持久化</title><updated>2023-08-09T08:28:13.782507+00:00</updated><content type="html"><![CDATA[<p>Redis持久化主要有两大机制：<strong>AOF</strong>和<strong>RDB</strong></p>
 <ul>
 <li>
 AOF记录的是<strong>Redis收到的每一条指令</strong>，以文本形式进行保存。<ul>
@@ -2076,7 +2085,7 @@ AOF文件过大带来的性能问题：</p>
 a、fork子进程，fork这个瞬间一定是会阻塞主线程的（注意，fork时并不会一次性拷贝所有内存数据给子进程，老师文章写的是拷贝所有内存数据给子进程，我个人认为是有歧义的），fork采用操作系统提供的写实复制(Copy On Write)机制，就是为了避免一次性拷贝大量内存数据给子进程造成的长时间阻塞问题，但fork子进程需要拷贝进程必要的数据结构，其中有一项就是拷贝内存页表（虚拟内存和物理内存的映射索引表），这个拷贝过程会消耗大量CPU资源，拷贝完成之前整个进程是会阻塞的，阻塞时间取决于整个实例的内存大小，实例越大，内存页表越大，fork阻塞时间越久。拷贝内存页表完成后，子进程与父进程指向相同的内存地址空间，也就是说此时虽然产生了子进程，但是并没有申请与父进程相同的内存大小。那什么时候父子进程才会真正内存分离呢？“写实复制”顾名思义，就是在写发生时，才真正拷贝内存真正的数据，这个过程中，父进程也可能会产生阻塞的风险，就是下面介绍的场景。
 b、fork出的子进程指向与父进程相同的内存地址空间，此时子进程就可以执行AOF重写，把内存中的所有数据写入到AOF文件中。但是此时父进程依旧是会有流量写入的，如果父进程操作的是一个已经存在的key，那么这个时候父进程就会真正拷贝这个key对应的内存数据，申请新的内存空间，这样逐渐地，父子进程内存数据开始分离，父子进程逐渐拥有各自独立的内存空间。因为内存分配是以页为单位进行分配的，默认4k，如果父进程此时操作的是一个bigkey，重新申请大块内存耗时会变长，可能会产阻塞风险。另外，如果操作系统开启了内存大页机制(Huge Page，页面大小2M)，那么父进程申请内存时阻塞的概率将会大大提高，所以在Redis机器上需要关闭Huge Page机制。Redis每次fork生成RDB或AOF重写完成后，都可以在Redis log中看到父进程重新申请了多大的内存空间。</p>
 <p>问题2，AOF重写不复用AOF本身的日志，一个原因是父子进程写同一个文件必然会产生竞争问题，控制竞争就意味着会影响父进程的性能。二是如果AOF重写过程中失败了，那么原本的AOF文件相当于被污染了，无法做恢复使用。所以Redis AOF重写一个新文件，重写失败的话，直接删除这个文件就好了，不会对原先的AOF文件产生影响。等重写完成之后，直接替换旧文件即可</p>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/15" rel="alternate"/><category term="Redis"/><published>2022-10-10T00:56:18+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/14</id><title>redis学习 day1</title><updated>2023-08-09T07:25:22.516794+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/192457217-11f702fe-76e2-492e-81ee-714beedfdf16.png" alt="redis问题画像" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/15" rel="alternate"/><category term="Redis"/><published>2022-10-10T00:56:18+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/14</id><title>redis学习 day1</title><updated>2023-08-09T08:28:13.886985+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/192457217-11f702fe-76e2-492e-81ee-714beedfdf16.png" alt="redis问题画像" /></p>
 <h2>Redis的支持的数据</h2>
 <ul>
 <li>String 简单动态字符串</li>
@@ -2101,7 +2110,7 @@ b、fork出的子进程指向与父进程相同的内存地址空间，此时子
 解决：
 渐进式rehash</li>
 </ol>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/14" rel="alternate"/><category term="Redis"/><published>2022-09-27T09:06:19+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/13</id><title>服务无法启动-oom问题</title><updated>2023-08-09T07:25:22.673998+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/189820555-f4be6124-bc4e-4c87-a07f-548a5cd8480f.png" alt="7C1B6017-539E-4350-A1DC-0DEE0C7CAF11" />
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/14" rel="alternate"/><category term="Redis"/><published>2022-09-27T09:06:19+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/13</id><title>服务无法启动-oom问题</title><updated>2023-08-09T08:28:13.991509+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/189820555-f4be6124-bc4e-4c87-a07f-548a5cd8480f.png" alt="7C1B6017-539E-4350-A1DC-0DEE0C7CAF11" />
 排查思路：日志中显示启动内存不足</p>
 <ul>
 <li>登陆服务器，使用<strong>free -m</strong>查看服务器内存使用情况
@@ -2111,7 +2120,7 @@ b、fork出的子进程指向与父进程相同的内存地址空间，此时子
 发现是由于配置的堆内存的大小远大于服务器存储剩余存储空间，导致服务无法启动。
 将该参数改成比服务器剩余内存空间较小的值，服务顺利启动。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/13" rel="alternate"/><category term="技术"/><published>2022-09-13T06:00:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/12</id><title>垃圾收集器</title><updated>2023-08-09T07:25:22.786617+00:00</updated><content type="html"><![CDATA[<h2>对象死亡判断</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/13" rel="alternate"/><category term="技术"/><published>2022-09-13T06:00:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/12</id><title>垃圾收集器</title><updated>2023-08-09T08:28:14.094288+00:00</updated><content type="html"><![CDATA[<h2>对象死亡判断</h2>
 <ul>
 <li>
 <p>引用计数法
@@ -2145,7 +2154,7 @@ PhantomReference实现虚引用。</li>
 </ul>
 </li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/12" rel="alternate"/><category term="虚拟机"/><published>2022-09-02T01:58:43+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/11</id><title>Java内存区域</title><updated>2023-08-09T07:25:22.906437+00:00</updated><content type="html"><![CDATA[<h2>运行时内存区域</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/12" rel="alternate"/><category term="虚拟机"/><published>2022-09-02T01:58:43+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/11</id><title>Java内存区域</title><updated>2023-08-09T08:28:14.206402+00:00</updated><content type="html"><![CDATA[<h2>运行时内存区域</h2>
 <ul>
 <li>程序计数器
 当前线程所执行的字节码的行号指示器。字节码解释器通过程序计数器来选取下一条需要执行的字节码指令。</li>
@@ -2169,7 +2178,7 @@ PhantomReference实现虚引用。</li>
 <li>对象的动态年龄判定
 除了年龄计数器值卡，如果在Survivor空间中相同年龄所以对象的总和大于Survivor空间的一般，年龄大于等于该年龄的对象直接进入老年代，无需等到MaxTenuringThreshold中要求的年龄。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/11" rel="alternate"/><category term="虚拟机"/><published>2022-08-31T01:35:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2023-08-09T07:25:23.004610+00:00</updated><content type="html"><![CDATA[<ul>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/11" rel="alternate"/><category term="虚拟机"/><published>2022-08-31T01:35:49+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/10</id><title>配置文件热加载</title><updated>2023-08-09T08:28:14.324785+00:00</updated><content type="html"><![CDATA[<ul>
 <li>
 <p><strong>怎么实现配置文件的热加载</strong>？
 java1.7中 提供了<strong>WatchService</strong>来监控系统中文件的变化。该监控是基于操作系统的文件系统监控器，可以监控系统是所有文件的变化，这种监控是无需遍历、无需比较的，是一种基于信号收发的监控，因此效率一定是最高的；现在Java对其进行了包装，可以直接在Java程序中使用OS的文件系统监控器了。</p>
@@ -2439,13 +2448,13 @@ public class HotLoadProperties {
 }
 
 </code></pre>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2023-08-09T07:25:23.119645+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/10" rel="alternate"/><category term="技术"/><published>2022-08-17T07:40:30+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/9</id><title>记SpringBoot从2.5.8升级到2.6.7遇到的循环依赖问题</title><updated>2023-08-09T08:28:14.426884+00:00</updated><content type="html"><![CDATA[<p>在SpringBoot升级完成之后，项目启动遇到问题，报了这么一个错误：
 <img src="https://user-images.githubusercontent.com/22972346/171575651-1280e4f6-6317-41c3-8703-9816f7f7a0db.png" alt="image" /></p>
 <blockquote>
 <p>Action:
 Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the &gt; dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting &gt; spring.main.allow-circular-references to true</p>
 </blockquote>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2023-08-09T07:25:23.387123+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/9" rel="alternate"/><category term="技术"/><published>2022-06-02T07:08:35+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/8</id><title>Head和Body相关</title><updated>2023-08-09T08:28:14.660884+00:00</updated><content type="html"><![CDATA[<h2>HTTP的实体数据</h2>
 <p>####数据类型使用的头字段</p>
 <ul>
 <li><strong>Accept/Accept-Encoding</strong></li>
@@ -2465,7 +2474,7 @@ Content-Type: text/html; charset=utf-8
 <li>分块传输
 使用&quot;chunked&quot;分块传输编码，在响应头中用头字段**&quot;Transfer-Encoding:chunked&quot;**表示</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2023-08-09T07:25:23.481329+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/8" rel="alternate"/><category term="HTTP相关"/><published>2022-05-27T01:10:20+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/7</id><title>相应状态码</title><updated>2023-08-09T08:28:14.763675+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/170392132-39e0193a-d7a2-4b67-b515-2eae48bf658b.png" alt="image" /></p>
 <ul>
 <li>1××：提示信息，表示目前是协议处理的中间状态，还需要后续的操作；</li>
 <li>2××：成功，报文已经收到并被正确处理；
@@ -2503,7 +2512,7 @@ Content-Type: text/html; charset=utf-8
 <li>4.HTTP使用了请求-应答模式，客户端主动发起请求，服务器被动回复请求；</li>
 <li>5.HTTP本质上是无状态的，每个请求都是互相独立、毫无关联的，协议不要求客户端或服务器记录请求相关的信息。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2023-08-09T07:25:23.615817+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/7" rel="alternate"/><category term="HTTP相关"/><published>2022-05-26T00:50:32+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/6</id><title>请求方法</title><updated>2023-08-09T08:28:14.861122+00:00</updated><content type="html"><![CDATA[<h2>标准请求方法</h2>
 <p>目前HTTP/1.1规定了八种方法：</p>
 <ul>
 <li><strong>GET</strong>   获取数据</li>
@@ -2526,7 +2535,7 @@ Content-Type: text/html; charset=utf-8
 <li>标记资源所在位置的path
 <img src="https://user-images.githubusercontent.com/22972346/170391320-d4f8abe7-e655-4dce-a0d0-93fb4ec4fc65.png" alt="image" /></li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2023-08-09T07:25:23.708713+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/6" rel="alternate"/><category term="HTTP相关"/><published>2022-05-25T09:49:21+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/2</id><title>HTTP专栏学习</title><updated>2023-08-09T08:28:14.972123+00:00</updated><content type="html"><![CDATA[<h3>名词解释</h3>
 <ul>
 <li>CND
 Content Delivery Network，内容分发网络，工作在客户端和服务器之间，它应用了HTTP协议里的缓存和代理技术，代替源站响应客户端的请求，主要起到缓存加速的作用。</li>
@@ -2587,7 +2596,7 @@ HTTP协议主要分为一下四大类：
 再搭配其他字段决定缓存策略。
 <strong>Server</strong>：相应字段，告诉客户端当前正在提供Web服务的软件名称和版本号。</li>
 </ul>
-]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2023-08-09T07:25:23.817328+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
+]]></content><link href="https://github.com/maminglang/minglang_blog/issues/2" rel="alternate"/><category term="HTTP相关"/><published>2022-04-20T05:56:04+00:00</published></entry><entry><id>https://github.com/maminglang/minglang_blog/issues/1</id><title>消息队列Kafka学习</title><updated>2023-08-09T08:28:15.074256+00:00</updated><content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/22972346/158500100-08edc531-01b9-4060-ab93-87c7d4cc7b7a.png" alt="image" /></p>
 <p>这整个下单过程，如果全部同步阻塞，那么耗时会增加，用户等待的时间会加长，体验不太好，同时下单过程依赖的链路越长，风险越大。为了加快响应，减少风险，我们可以把一些非必须卡在主链路中的业务拆解出去，让它们和主业务解耦。下单的最关键核心就是要保证库存、用户支付、商家打款的一致性，消息的通知完全可以走异步。这样整个下单过程不会因为通知商家或者通知用户阻塞而阻塞，也不会因为它们失败而提示订单失败。</p>
 <p><img src="https://user-images.githubusercontent.com/22972346/158500145-04bfeb6c-b27f-4688-b465-abe0a8229631.png" alt="image" /></p>
 <p>接下来就是如何设计一个消息引擎了，宏观来看一个消息引擎支持发送、存储、接收就行了。
