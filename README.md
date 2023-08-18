@@ -7,11 +7,11 @@ My personal blog using issues and GitHub Actions (随意转载，无需署名)
 ## 置顶文章
 - [消息队列Kafka学习](https://github.com/maminglang/minglang_blog/issues/1)--2022-03-16
 ## 最近更新
+- [位图](https://github.com/maminglang/minglang_blog/issues/44)--2023-08-18
 - [创建型](https://github.com/maminglang/minglang_blog/issues/43)--2023-08-17
 - [缓存技术选型](https://github.com/maminglang/minglang_blog/issues/42)--2023-08-13
 - [Java中的泛型](https://github.com/maminglang/minglang_blog/issues/41)--2023-08-09
 - [定时任务](https://github.com/maminglang/minglang_blog/issues/39)--2023-06-02
-- [事务相关问题](https://github.com/maminglang/minglang_blog/issues/38)--2023-05-29
 ## HTTP相关
 - [Head和Body相关](https://github.com/maminglang/minglang_blog/issues/8)--2022-05-27
 - [相应状态码](https://github.com/maminglang/minglang_blog/issues/7)--2022-05-26
@@ -50,6 +50,7 @@ My personal blog using issues and GitHub Actions (随意转载，无需署名)
 </details>
 
 ## 算法
+- [位图](https://github.com/maminglang/minglang_blog/issues/44)--2023-08-18
 - [哈希表](https://github.com/maminglang/minglang_blog/issues/34)--2022-12-15
 - [二叉树](https://github.com/maminglang/minglang_blog/issues/33)--2022-12-08
 - [整数除法](https://github.com/maminglang/minglang_blog/issues/23)--2022-10-31
